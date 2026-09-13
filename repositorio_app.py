@@ -109,7 +109,7 @@ st.markdown(
     """
     <div class="header-box">
         <h1>Repositorio Digital de Convivencia Escolar</h1>
-        <p>Sistema institucional seguro de consulta y gestión de registros disciplinarios.</p>
+        <p>Institución Educativa Técnica Sagrado Corazón.</p>
     </div>
 """,
     unsafe_allow_html=True,
@@ -135,12 +135,6 @@ st.sidebar.header("Panel de Control")
 rol = st.sidebar.selectbox(
     "Seleccione su perfil:",
     ["Estudiante", "Padre de Familia / Acudiente", "Docente / Directivo"],
-)
-
-st.sidebar.markdown("---")
-st.sidebar.info(
-    "*Consejo de seguridad:* Los estudiantes y padres solo pueden visualizar"
-    " la información asociada a su documento o nombre registrado."
 )
 
 if rol == "Estudiante":

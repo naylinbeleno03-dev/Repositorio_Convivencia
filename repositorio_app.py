@@ -1,12 +1,119 @@
 import pandas as pd
 import streamlit as st
 
+# Configuración de la página
 st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-st.title("Repositorio Digital de Convivencia Escolar")
-st.write("Institución Educativa Técnica Sagrado Corazón")
+# Estilos CSS personalizados (iguales a los de tu primera página)
+st.markdown(
+    """
+    <style>
+    /* 1. Fondo principal en Gris Clarito */
+    .stApp {
+        background-color: #F3F4F6;
+        color: #1F2937;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* 2. Barra lateral en Gris un poco más oscuro */
+    section[data-testid="stSidebar"] {
+        background-color: #475569;
+        border-right: 1px solid #334155;
+    }
+
+    /* Textos de la barra lateral en blanco */
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] li,
+    section[data-testid="stSidebar"] a {
+        color: #FFFFFF !important;
+    }
+
+    /* Visibilidad del desplegable en la barra lateral */
+    section[data-testid="stSidebar"] details {
+        background-color: #334155 !important;
+        border: 1px solid #64748B !important;
+        border-radius: 8px !important;
+        padding: 6px 10px !important;
+    }
+
+    section[data-testid="stSidebar"] summary {
+        color: #FFFFFF !important;
+        background-color: #334155 !important;
+        font-weight: 600 !important;
+    }
+
+    /* 3. Encabezado superior */
+    .header-box {
+        background-color: #0F172A;
+        padding: 22px;
+        border-radius: 12px;
+        border-left: 6px solid #D4AF37;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        margin-bottom: 24px;
+    }
+
+    .header-box h1 {
+        color: #FFFFFF !important;
+        margin: 0 !important;
+        font-size: 1.65rem !important;
+        font-weight: 600 !important;
+    }
+
+    .header-box p {
+        color: #E2E8F0 !important;
+        margin-top: 6px !important;
+        margin-bottom: 0 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Botones generales */
+    .stButton>button {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        border: 1px solid #0F172A !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 8px 16px !important;
+    }
+
+    .stButton>button:hover {
+        background-color: #D4AF37 !important;
+        color: #0F172A !important;
+        border-color: #D4AF37 !important;
+    }
+
+    /* Campo de entrada de texto */
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+    }
+
+    hr {
+        border-color: #64748B;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
+# Encabezado visual estilizado
+st.markdown(
+    """
+    <div class="header-box">
+        <h1>Repositorio Digital de Convivencia Escolar</h1>
+        <p>Sistema institucional seguro de consulta y gestión de registros disciplinarios.</p>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
 # Cargar datos de forma segura
 try:
@@ -23,13 +130,18 @@ except FileNotFoundError:
       ]
   )
 
-# 1. Selector de Rol inicial
+# 1. Selector de Rol inicial en la barra lateral
+st.sidebar.header("Panel de Control")
 rol = st.sidebar.selectbox(
     "Seleccione su perfil:",
     ["Estudiante", "Padre de Familia / Acudiente", "Docente / Directivo"],
 )
 
-st.markdown("---")
+st.sidebar.markdown("---")
+st.sidebar.info(
+    "*Consejo de seguridad:* Los estudiantes y padres solo pueden visualizar"
+    " la información asociada a su documento o nombre registrado."
+)
 
 if rol == "Estudiante":
   st.subheader("Portal de Estudiante")
@@ -38,19 +150,16 @@ if rol == "Estudiante":
   )
 
   if doc_input:
-    # Filtrar estrictamente por el documento o nombre del alumno
     resultado = df[
         df["documento"].astype(str).str.contains(doc_input, case=False, na=False)
         | df["nombre"].str.contains(doc_input, case=False, na=False)
     ]
 
     if not resultado.empty:
-      st.success(
-          "Registros encontrados (Visualización exclusiva de seguridad):"
-      )
+      st.success("Registros encontrados en el sistema:")
       for index, row in resultado.iterrows():
         st.info(
-            f"**Fecha:** {row['fecha']} | **Tipo:**"
+            f" **Fecha:** {row['fecha']} | **Tipo:**"
             f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
         )
     else:
@@ -75,9 +184,9 @@ elif rol == "Padre de Familia / Acudiente":
       st.success("Registros del estudiante:")
       for index, row in resultado.iterrows():
         st.info(
-            f"**Estudiante:** {row['nombre']} ({row['grado']})\n**Fecha:**"
-            f" {row['fecha']} | **Tipo:** {row['tipo_registro']}\n**Detalles:**"
-            f" {row['detalles']}"
+            f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
+            f" **Fecha:** {row['fecha']} | **Tipo:**"
+            f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
     else:
       st.warning("No se hallaron registros para el estudiante indicado.")
@@ -86,7 +195,7 @@ elif rol == "Docente / Directivo":
   st.subheader("Panel Administrativo")
   password = st.text_input("Ingrese la contraseña institucional:", type="password")
 
-  # Contraseña de ejemplo (cámbiala por la que prefieras)
+  # Contraseña configurable
   if password == "Sagrado2026*":
     st.success(
         "Acceso concedido. Puede administrar la información del repositorio."
@@ -96,7 +205,7 @@ elif rol == "Docente / Directivo":
       st.write("### Agregar Nuevo Registro al Repositorio")
       nuevo_doc = st.text_input("Documento del Estudiante")
       nuevo_nombre = st.text_input("Nombre Completo")
-      nuevo_grado = st.text_input("Grado y Curso")
+      nuevo_grado = st.text_input("Grado y Curso (ej. 11°)")
       tipo_reg = st.selectbox(
           "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
       )
@@ -122,7 +231,7 @@ elif rol == "Docente / Directivo":
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")
-    st.dataframe(df)
+    st.dataframe(df, use_container_width=True)
 
   elif password:
     st.error("Contraseña incorrecta. Intente de nuevo.")

@@ -284,7 +284,7 @@ elif rol == "Docente / Directivo":
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")
-    st.dataframe(df, use_container_width=True)
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
   elif password:
     st.error("Contraseña incorrecta. Intente de nuevo.")

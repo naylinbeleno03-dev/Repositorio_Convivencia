@@ -1,3 +1,4 @@
+from datetime import date
 import os
 import pandas as pd
 import streamlit as st
@@ -243,7 +244,7 @@ elif rol == "Docente / Directivo":
           "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
       )
       detalles_reg = st.text_area("Descripción de los hechos y compromisos")
-      fecha_reg = st.date_input("Fecha")
+      fecha_reg = st.date_input("Fecha", max_value=date.today())
 
       # Campo para subir el documento escaneado con firmas
       archivo_subido = st.file_uploader(

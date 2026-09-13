@@ -160,7 +160,7 @@ if rol == "Estudiante":
       st.success("Registros encontrados en el sistema:")
       for index, row in resultado.iterrows():
         st.info(
-            f"📅 **Fecha:** {row['fecha']} | 📝 **Tipo:**"
+            f" **Fecha:** {row['fecha']} |  **Tipo:**"
             f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
         )
 
@@ -201,8 +201,8 @@ elif rol == "Padre de Familia / Acudiente":
       st.success("Registros del estudiante:")
       for index, row in resultado.iterrows():
         st.info(
-            f"🎓 **Estudiante:** {row['nombre']} ({row['grado']})\n📅"
-            f" **Fecha:** {row['fecha']} | 📝 **Tipo:**"
+            f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
+            f" **Fecha:** {row['fecha']} |  **Tipo:**"
             f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
 
@@ -229,7 +229,7 @@ elif rol == "Docente / Directivo":
   password = st.text_input("Ingrese la contraseña institucional:", type="password")
 
   # Contraseña configurable
-  if password == "Sagrado2026*":
+  if password == "Sagracor15*":
     st.success(
         "Acceso concedido. Puede administrar la información del repositorio."
     )
@@ -238,7 +238,7 @@ elif rol == "Docente / Directivo":
       st.write("### Agregar Nuevo Registro al Repositorio")
       nuevo_doc = st.text_input("Documento del Estudiante")
       nuevo_nombre = st.text_input("Nombre Completo")
-      nuevo_grado = st.text_input("Grado y Curso (ej. 11°)")
+      nuevo_grado = st.text_input("Grado y Curso")
       tipo_reg = st.selectbox(
           "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
       )

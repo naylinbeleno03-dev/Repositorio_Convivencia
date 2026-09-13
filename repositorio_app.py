@@ -145,6 +145,14 @@ rol = st.sidebar.selectbox(
     ["Estudiante", "Padre de Familia / Acudiente", "Docente / Directivo"],
 )
 
+# Sección de enlace al Chatbot en la barra lateral
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Asistente Virtual")
+st.sidebar.markdown(
+    "🤖 [Abrir Chatbot de"
+    " Convivencia](https://chatbot-convivencia-sena-edehd4uhj9lkziarpaexb2.streamlit.app/)"
+)
+
 if rol == "Estudiante":
   st.subheader("Portal de Estudiante")
   doc_input = st.text_input(

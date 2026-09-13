@@ -126,26 +126,28 @@ SHEET_ID = "1eUTG3EFoVvRDpycgNv6JdUP_jAa4106SCCNhXIQGFsc"
 url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzyoa-yvvfMj3RE94dGU9tSaPLbo0fRcQs5cfp_QuiB5yUYphukHOj104WWFJ11iSctgQ/exec"
 
-# Cargar datos directamente desde Google Sheets de forma segura y normalizada
-try:
-  df = pd.read_csv(url_csv)
-  # Limpiar y convertir nombres de columnas a minúsculas para evitar duplicados
-  df.columns = [str(col).strip().lower() for col in df.columns]
+# Cargar datos en la memoria de sesión para asegurar actualización instantánea
+if "df" not in st.session_state:
+  try:
+    df_temp = pd.read_csv(url_csv)
+    df_temp.columns = [str(col).strip().lower() for col in df_temp.columns]
+    if "archivo" not in df_temp.columns:
+      df_temp["archivo"] = "Sin archivo"
+    st.session_state.df = df_temp
+  except Exception:
+    st.session_state.df = pd.DataFrame(
+        columns=[
+            "documento",
+            "nombre",
+            "grado",
+            "tipo_registro",
+            "detalles",
+            "fecha",
+            "archivo",
+        ]
+    )
 
-  if "archivo" not in df.columns:
-    df["archivo"] = "Sin archivo"
-except Exception:
-  df = pd.DataFrame(
-      columns=[
-          "documento",
-          "nombre",
-          "grado",
-          "tipo_registro",
-          "detalles",
-          "fecha",
-          "archivo",
-      ]
-  )
+df = st.session_state.df
 
 # 1. Selector de Rol inicial en la barra lateral
 st.sidebar.header("Panel de Control")
@@ -285,7 +287,7 @@ elif rol == "Docente / Directivo":
 
         # Enviar datos automáticamente a Google Sheets mediante Apps Script
         datos_a_enviar = {
-            "documento": nuevo_doc,
+            "documento": str(nuevo_doc),
             "nombre": nuevo_nombre,
             "grado": nuevo_grado,
             "tipo_registro": tipo_reg,
@@ -296,16 +298,23 @@ elif rol == "Docente / Directivo":
 
         try:
           requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
-          st.success(
-              "¡Registro guardado en Google Sheets y documento procesado"
-              " exitosamente!"
+
+          # Agregar inmediatamente el registro a la tabla en memoria de Streamlit
+          nuevo_df = pd.DataFrame([datos_a_enviar])
+          st.session_state.df = pd.concat(
+              [st.session_state.df, nuevo_df], ignore_index=True
           )
+
+          st.success(
+              "¡Registro guardado y reflejado en el sistema exitosamente!"
+          )
+          st.rerun()  # Recarga la aplicación para actualizar la vista al instante
         except Exception as e:
           st.error(f"Error al conectar con la base de datos en la nube: {e}")
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")
-    st.dataframe(df, use_container_width=True, hide_index=True)
+    st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
 
   elif password:
     st.error("Contraseña incorrecta. Intente de nuevo.")

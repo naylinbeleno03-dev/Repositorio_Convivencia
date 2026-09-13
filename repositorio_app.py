@@ -122,10 +122,10 @@ st.markdown(
 )
 
 # Configuración de Google Sheets
-SHEET_ID = "TU_ID_DE_LA_HOJA"  # Reemplaza con el ID de tu Google Sheet
+SHEET_ID = "1eUTG3EFoVvRDpycgNv6JdUP_jAa4106SCCNhXIQGFsc"  # Reemplaza con el ID de tu Google Sheet
 url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
-URL_APPS_SCRIPT = (https://script.google.com/macros/s/AKfycbzyoa-yvvfMj3RE94dGU9tSaPLbo0fRcQs5cfp_QuiB5yUYphukHOj104WWFJ11iSctgQ/exec
-    "TU_URL_DE_APPS_SCRIPT"  # Reemplaza con la URL de la aplicación web desplegada
+URL_APPS_SCRIPT = (
+    "https://script.google.com/macros/s/AKfycbzyoa-yvvfMj3RE94dGU9tSaPLbo0fRcQs5cfp_QuiB5yUYphukHOj104WWFJ11iSctgQ/exec"  # Reemplaza con la URL de la aplicación web desplegada
 )
 
 # Cargar datos directamente desde Google Sheets de forma segura

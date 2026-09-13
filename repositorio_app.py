@@ -1,3 +1,4 @@
+import base64
 from datetime import date
 import os
 import pandas as pd
@@ -164,6 +165,59 @@ st.sidebar.markdown(
     " Convivencia](https://chatbot-convivencia-sena-edehd4uhj9lkziarpaexb2.streamlit.app/)"
 )
 
+
+# Función para mostrar la vista previa y botón de descarga del archivo subido
+def mostrar_evidencia(nombre_archivo, index_key):
+  if nombre_archivo and str(nombre_archivo).strip() not in [
+      "Sin archivo",
+      "nan",
+      "None",
+      "",
+  ]:
+    ruta_archivo = os.path.join("documentos_firmados", str(nombre_archivo))
+
+    if os.path.exists(ruta_archivo):
+      st.markdown(f"**📎 Archivo Adjunto:** `{nombre_archivo}`")
+      ext = str(nombre_archivo).lower().split(".")[-1]
+
+      # Si es imagen (JPG/PNG), mostrarla directamente
+      if ext in ["jpg", "jpeg", "png"]:
+        st.image(
+            ruta_archivo,
+            caption=f"Evidencia: {nombre_archivo}",
+            use_container_width=True,
+        )
+
+      # Si es un documento PDF, desplegar visor interactivo
+      elif ext == "pdf":
+        try:
+          with open(ruta_archivo, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+          pdf_display = (
+              f'<iframe src="data:application/pdf;base64,{base64_pdf}"'
+              ' width="100%" height="450px"'
+              ' type="application/pdf"></iframe>'
+          )
+          st.markdown(pdf_display, unsafe_allow_html=True)
+        except Exception:
+          st.info("Vista previa no disponible para este PDF.")
+
+      # Botón para descargar el documento
+      with open(ruta_archivo, "rb") as archivo_pdf:
+        st.download_button(
+            label=f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})",
+            data=archivo_pdf,
+            file_name=str(nombre_archivo),
+            mime="application/octet-stream",
+            key=f"btn_{index_key}",
+        )
+    else:
+      st.info(
+          f"📄 Archivo registrado: `{nombre_archivo}` (No encontrado en el"
+          " servidor local)."
+      )
+
+
 if rol == "Estudiante":
   st.subheader("Portal de Estudiante")
   doc_input = st.text_input(
@@ -184,21 +238,8 @@ if rol == "Estudiante":
             f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
         )
 
-        # Mostrar botón de descarga si hay un acta firmada adjunta
-        nombre_archivo = str(row["archivo"])
-        if nombre_archivo and nombre_archivo != "Sin archivo":
-          ruta_archivo = os.path.join("documentos_firmados", nombre_archivo)
-          if os.path.exists(ruta_archivo):
-            with open(ruta_archivo, "rb") as archivo_pdf:
-              st.download_button(
-                  label=(
-                      f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})"
-                  ),
-                  data=archivo_pdf,
-                  file_name=nombre_archivo,
-                  mime="application/octet-stream",
-                  key=f"est_{index}",
-              )
+        # Mostrar vista previa y/o botón de descarga
+        mostrar_evidencia(row["archivo"], f"est_{index}")
     else:
       st.warning(
           "No se encontraron registros asociados con ese documento o nombre."
@@ -226,21 +267,8 @@ elif rol == "Padre de Familia / Acudiente":
             f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
 
-        # Mostrar botón de descarga para acudientes
-        nombre_archivo = str(row["archivo"])
-        if nombre_archivo and nombre_archivo != "Sin archivo":
-          ruta_archivo = os.path.join("documentos_firmados", nombre_archivo)
-          if os.path.exists(ruta_archivo):
-            with open(ruta_archivo, "rb") as archivo_pdf:
-              st.download_button(
-                  label=(
-                      f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})"
-                  ),
-                  data=archivo_pdf,
-                  file_name=nombre_archivo,
-                  mime="application/octet-stream",
-                  key=f"padre_{index}",
-              )
+        # Mostrar vista previa y/o botón de descarga
+        mostrar_evidencia(row["archivo"], f"padre_{index}")
     else:
       st.warning("No se hallaron registros para el estudiante indicado.")
 

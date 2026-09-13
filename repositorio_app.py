@@ -1,12 +1,16 @@
+import os
 import pandas as pd
 import streamlit as st
+
+# Crear carpeta para almacenar los documentos firmados si no existe
+os.makedirs("documentos_firmados", exist_ok=True)
 
 # Configuración de la página
 st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS personalizados (iguales a los de tu primera página)
+# Estilos CSS personalizados
 st.markdown(
     """
     <style>
@@ -115,9 +119,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Cargar datos de forma segura
+# Cargar datos de forma segura (incluyendo la columna 'archivo')
 try:
   df = pd.read_csv("registros_convivencia.csv")
+  if "archivo" not in df.columns:
+    df["archivo"] = "Sin archivo"
 except FileNotFoundError:
   df = pd.DataFrame(
       columns=[
@@ -127,6 +133,7 @@ except FileNotFoundError:
           "tipo_registro",
           "detalles",
           "fecha",
+          "archivo",
       ]
   )
 
@@ -153,9 +160,25 @@ if rol == "Estudiante":
       st.success("Registros encontrados en el sistema:")
       for index, row in resultado.iterrows():
         st.info(
-            f" **Fecha:** {row['fecha']} | **Tipo:**"
+            f"📅 **Fecha:** {row['fecha']} | 📝 **Tipo:**"
             f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
         )
+
+        # Mostrar botón de descarga si hay un acta firmada adjunta
+        nombre_archivo = str(row["archivo"])
+        if nombre_archivo and nombre_archivo != "Sin archivo":
+          ruta_archivo = os.path.join("documentos_firmados", nombre_archivo)
+          if os.path.exists(ruta_archivo):
+            with open(ruta_archivo, "rb") as archivo_pdf:
+              st.download_button(
+                  label=(
+                      f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})"
+                  ),
+                  data=archivo_pdf,
+                  file_name=nombre_archivo,
+                  mime="application/octet-stream",
+                  key=f"est_{index}",
+              )
     else:
       st.warning(
           "No se encontraron registros asociados con ese documento o nombre."
@@ -178,10 +201,26 @@ elif rol == "Padre de Familia / Acudiente":
       st.success("Registros del estudiante:")
       for index, row in resultado.iterrows():
         st.info(
-            f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
-            f" **Fecha:** {row['fecha']} | **Tipo:**"
+            f"🎓 **Estudiante:** {row['nombre']} ({row['grado']})\n📅"
+            f" **Fecha:** {row['fecha']} | 📝 **Tipo:**"
             f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
+
+        # Mostrar botón de descarga para acudientes
+        nombre_archivo = str(row["archivo"])
+        if nombre_archivo and nombre_archivo != "Sin archivo":
+          ruta_archivo = os.path.join("documentos_firmados", nombre_archivo)
+          if os.path.exists(ruta_archivo):
+            with open(ruta_archivo, "rb") as archivo_pdf:
+              st.download_button(
+                  label=(
+                      f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})"
+                  ),
+                  data=archivo_pdf,
+                  file_name=nombre_archivo,
+                  mime="application/octet-stream",
+                  key=f"padre_{index}",
+              )
     else:
       st.warning("No se hallaron registros para el estudiante indicado.")
 
@@ -206,9 +245,26 @@ elif rol == "Docente / Directivo":
       detalles_reg = st.text_area("Descripción de los hechos y compromisos")
       fecha_reg = st.date_input("Fecha")
 
+      # Campo para subir el documento escaneado con firmas
+      archivo_subido = st.file_uploader(
+          "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
+          type=["pdf", "png", "jpg", "jpeg"],
+      )
+
       submit = st.form_submit_button("Guardar en el Sistema")
 
       if submit:
+        nombre_archivo_guardado = "Sin archivo"
+
+        # Procesar el archivo si el docente lo subió
+        if archivo_subido is not None:
+          nombre_archivo_guardado = archivo_subido.name
+          ruta_destino = os.path.join(
+              "documentos_firmados", nombre_archivo_guardado
+          )
+          with open(ruta_destino, "wb") as f:
+            f.write(archivo_subido.getbuffer())
+
         nuevo_dato = pd.DataFrame(
             [{
                 "documento": nuevo_doc,
@@ -217,11 +273,14 @@ elif rol == "Docente / Directivo":
                 "tipo_registro": tipo_reg,
                 "detalles": detalles_reg,
                 "fecha": str(fecha_reg),
+                "archivo": nombre_archivo_guardado,
             }]
         )
         df = pd.concat([df, nuevo_dato], ignore_index=True)
         df.to_csv("registros_convivencia.csv", index=False)
-        st.success("¡Registro guardado exitosamente en el archivo CSV!")
+        st.success(
+            "¡Registro y documento de evidencia guardados exitosamente!"
+        )
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")

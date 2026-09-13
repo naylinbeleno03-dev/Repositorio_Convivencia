@@ -1,6 +1,7 @@
 from datetime import date
 import os
 import pandas as pd
+import requests
 import streamlit as st
 
 # Crear carpeta para almacenar los documentos firmados si no existe
@@ -120,12 +121,19 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Cargar datos de forma segura (incluyendo la columna 'archivo')
+# Configuración de Google Sheets
+SHEET_ID = "TU_ID_DE_LA_HOJA"  # Reemplaza con el ID de tu Google Sheet
+url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
+URL_APPS_SCRIPT = (
+    "TU_URL_DE_APPS_SCRIPT"  # Reemplaza con la URL de la aplicación web desplegada
+)
+
+# Cargar datos directamente desde Google Sheets de forma segura
 try:
-  df = pd.read_csv("registros_convivencia.csv")
+  df = pd.read_csv(url_csv)
   if "archivo" not in df.columns:
     df["archivo"] = "Sin archivo"
-except FileNotFoundError:
+except Exception:
   df = pd.DataFrame(
       columns=[
           "documento",
@@ -274,22 +282,25 @@ elif rol == "Docente / Directivo":
           with open(ruta_destino, "wb") as f:
             f.write(archivo_subido.getbuffer())
 
-        nuevo_dato = pd.DataFrame(
-            [{
-                "documento": nuevo_doc,
-                "nombre": nuevo_nombre,
-                "grado": nuevo_grado,
-                "tipo_registro": tipo_reg,
-                "detalles": detalles_reg,
-                "fecha": str(fecha_reg),
-                "archivo": nombre_archivo_guardado,
-            }]
-        )
-        df = pd.concat([df, nuevo_dato], ignore_index=True)
-        df.to_csv("registros_convivencia.csv", index=False)
-        st.success(
-            "¡Registro y documento de evidencia guardados exitosamente!"
-        )
+        # Enviar datos automáticamente a Google Sheets mediante Apps Script
+        datos_a_enviar = {
+            "documento": nuevo_doc,
+            "nombre": nuevo_nombre,
+            "grado": nuevo_grado,
+            "tipo_registro": tipo_reg,
+            "detalles": detalles_reg,
+            "fecha": str(fecha_reg),
+            "archivo": nombre_archivo_guardado,
+        }
+
+        try:
+          requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
+          st.success(
+              "¡Registro guardado en Google Sheets y documento procesado"
+              " exitosamente!"
+          )
+        except Exception as e:
+          st.error(f"Error al conectar con la base de datos en la nube: {e}")
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")

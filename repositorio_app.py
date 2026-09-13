@@ -124,7 +124,7 @@ st.markdown(
 # Configuración de Google Sheets
 SHEET_ID = "TU_ID_DE_LA_HOJA"  # Reemplaza con el ID de tu Google Sheet
 url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
-URL_APPS_SCRIPT = (
+URL_APPS_SCRIPT = (https://script.google.com/macros/s/AKfycbzyoa-yvvfMj3RE94dGU9tSaPLbo0fRcQs5cfp_QuiB5yUYphukHOj104WWFJ11iSctgQ/exec
     "TU_URL_DE_APPS_SCRIPT"  # Reemplaza con la URL de la aplicación web desplegada
 )
 
@@ -157,7 +157,7 @@ rol = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Asistente Virtual")
 st.sidebar.markdown(
-    "🤖 [Abrir Chatbot de"
+    "[Abrir Chatbot de"
     " Convivencia](https://chatbot-convivencia-sena-edehd4uhj9lkziarpaexb2.streamlit.app/)"
 )
 

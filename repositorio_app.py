@@ -16,13 +16,12 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #F3F4F6;
-        color: #1F2937;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #F3F4F6 !important;
+        color: #1F2937 !important;
     }
     section[data-testid="stSidebar"] {
-        background-color: #475569;
-        border-right: 1px solid #334155;
+        background-color: #475569 !important;
+        border-right: 1px solid #334155 !important;
     }
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
@@ -34,7 +33,7 @@ st.markdown(
         color: #FFFFFF !important;
     }
     .header-box {
-        background-color: #0F172A;
+        background-color: #0F172A !important;
         padding: 22px;
         border-radius: 12px;
         border-left: 6px solid #D4AF37;
@@ -66,6 +65,10 @@ st.markdown(
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
+    /* SOLUCIÓN: Forzar etiquetas y títulos de los campos a color oscuro legible */
+    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
+        color: #1F2937 !important;
+    }
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
         background-color: #FFFFFF !important;
         color: #000000 !important;
@@ -73,13 +76,12 @@ st.markdown(
         border-radius: 6px !important;
     }
     hr {
-        border-color: #64748B;
+        border-color: #64748B !important;
     }
     </style>
 """,
     unsafe_allow_html=True,
 )
-
 st.markdown(
     """
     <div class="header-box">

@@ -139,14 +139,14 @@ def mostrar_evidencia(link_archivo):
   ]:
     st.markdown("---")
     if str(link_archivo).startswith("http"):
-      st.markdown("**📄 Evidencia o Acta Firmada en la Nube:**")
+      st.markdown("**Evidencia o Acta Firmada en la Nube:**")
       st.link_button(
-          "🔗 Abrir y Ver Documento Firmado",
+          "Abrir y Ver Documento Firmado",
           link_archivo,
           use_container_width=True,
       )
     else:
-      st.info(f"📄 Archivo registrado: `{link_archivo}`")
+      st.info(f"Archivo registrado: `{link_archivo}`")
 
 
 if rol == "Estudiante":
@@ -295,7 +295,7 @@ elif rol == "Docente / Directivo":
     # NUEVO: Lista interactiva para que el docente pueda abrir y ver los documentos de cada estudiante
     st.write("---")
     st.write(
-        "### 📂 Visualizar y Descargar Actas (Panel Administrativo de"
+        "### Visualizar y Descargar Actas (Panel Administrativo de"
         " Archivos)"
     )
     st.info(
@@ -312,7 +312,7 @@ elif rol == "Docente / Directivo":
       detalles_reg = row.get("detalles", "")
       archivo_reg = row.get("archivo", "Sin archivo")
 
-      with st.expander(f"📁 {nombre_est} - {tipo_reg} ({fecha_reg})"):
+      with st.expander(f" {nombre_est} - {tipo_reg} ({fecha_reg})"):
         st.write(f"**Documento:** {doc_reg}")
         st.write(f"**Grado:** {grado_reg}")
         st.write(f"**Detalles:** {detalles_reg}")

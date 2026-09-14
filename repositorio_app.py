@@ -1,3 +1,4 @@
+import base64
 from datetime import date, datetime
 import os
 import pandas as pd

@@ -46,8 +46,9 @@ st.markdown(
         font-size: 1.65rem !important;
         font-weight: 600 !important;
     }
-    .header-box p {
-        color: #E2E8F0 !important;
+    /* SOLUCIÓN: Forzar mayor especificidad para que el párrafo del header sea blanco */
+    .stMarkdown .header-box p, .header-box p {
+        color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
@@ -65,9 +66,12 @@ st.markdown(
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
-    /* SOLUCIÓN: Forzar etiquetas y títulos de los campos a color oscuro legible */
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
+    }
+    /* Excepción para que el p del header-box dentro de stMarkdown no coja el color oscuro */
+    .stMarkdown .header-box p {
+        color: #FFFFFF !important;
     }
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
         background-color: #FFFFFF !important;
@@ -82,6 +86,8 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
+
+# Encabezado superior
 st.markdown(
     """
     <div class="header-box">

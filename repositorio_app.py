@@ -15,20 +15,15 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* 1. Fondo principal en Gris Clarito */
     .stApp {
         background-color: #F3F4F6;
         color: #1F2937;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-    
-    /* 2. Barra lateral en Gris un poco más oscuro */
     section[data-testid="stSidebar"] {
         background-color: #475569;
         border-right: 1px solid #334155;
     }
-
-    /* Textos de la barra lateral en blanco */
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
     section[data-testid="stSidebar"] h3,
@@ -38,22 +33,6 @@ st.markdown(
     section[data-testid="stSidebar"] a {
         color: #FFFFFF !important;
     }
-
-    /* Visibilidad del desplegable en la barra lateral */
-    section[data-testid="stSidebar"] details {
-        background-color: #334155 !important;
-        border: 1px solid #64748B !important;
-        border-radius: 8px !important;
-        padding: 6px 10px !important;
-    }
-
-    section[data-testid="stSidebar"] summary {
-        color: #FFFFFF !important;
-        background-color: #334155 !important;
-        font-weight: 600 !important;
-    }
-
-    /* 3. Encabezado superior */
     .header-box {
         background-color: #0F172A;
         padding: 22px;
@@ -62,22 +41,18 @@ st.markdown(
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
-
     .header-box h1 {
         color: #FFFFFF !important;
         margin: 0 !important;
         font-size: 1.65rem !important;
         font-weight: 600 !important;
     }
-
     .header-box p {
         color: #E2E8F0 !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
-
-    /* Botones generales */
     .stButton>button {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
@@ -86,21 +61,17 @@ st.markdown(
         font-weight: 600 !important;
         padding: 8px 16px !important;
     }
-
     .stButton>button:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
-
-    /* Campo de entrada de texto */
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
         background-color: #FFFFFF !important;
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
     }
-
     hr {
         border-color: #64748B;
     }
@@ -109,7 +80,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Encabezado visual estilizado
 st.markdown(
     """
     <div class="header-box">
@@ -120,12 +90,10 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Configuración de Google Sheets
 SHEET_ID = "1eUTG3EFoVvRDpycgNv6JdUP_jAa4106SCCNhXIQGFsc"
 url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
-URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxDuN5qazL_uB1zpSu0TJ7Y0mvD6HmMzByPraF4J36a3pmj6aJzJzIbkIIWI6MOMhnRoQ/exec"
+URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzyoa-yvvfMj3RE94dGU9tSaPLbo0fRcQs5cfp_QuiB5yUYphukHOj104WWFJ11iSctgQ/exec"
 
-# Cargar datos en la memoria de sesión para asegurar actualización instantánea
 if "df" not in st.session_state:
   try:
     df_temp = pd.read_csv(url_csv)
@@ -148,14 +116,12 @@ if "df" not in st.session_state:
 
 df = st.session_state.df
 
-# 1. Selector de Rol inicial en la barra lateral
 st.sidebar.header("Panel de Control")
 rol = st.sidebar.selectbox(
     "Seleccione su perfil:",
     ["Estudiante", "Padre de Familia / Acudiente", "Docente / Directivo"],
 )
 
-# Sección de enlace al Chatbot en la barra lateral
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Asistente Virtual")
 st.sidebar.markdown(
@@ -164,7 +130,6 @@ st.sidebar.markdown(
 )
 
 
-# Función para mostrar el botón interactivo que abre el documento de Google Drive
 def mostrar_evidencia(link_archivo):
   if link_archivo and str(link_archivo).strip() not in [
       "Sin archivo",
@@ -253,13 +218,11 @@ elif rol == "Docente / Directivo":
       )
       detalles_reg = st.text_area("Descripción de los hechos y compromisos")
 
-      # Fecha actual exacta ajustada a Colombia (evita que se adelante al día siguiente)
       hoy_colombia = datetime.now(ZoneInfo("America/Bogota")).date()
       fecha_reg = st.date_input(
           "Fecha", value=hoy_colombia, max_value=hoy_colombia
       )
 
-      # Campo para subir el documento escaneado con firmas
       archivo_subido = st.file_uploader(
           "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
           type=["pdf", "png", "jpg", "jpeg"],
@@ -292,37 +255,68 @@ elif rol == "Docente / Directivo":
         }
 
         try:
-          # Enviar a Apps Script y capturar la respuesta con la URL generada
           response = requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
           res_json = response.json()
-          url_generada = res_json.get("url", "Sin archivo")
 
-          # Crear registro local con la URL correcta para que aparezca de inmediato
-          nuevo_registro = {
-              "documento": str(nuevo_doc),
-              "nombre": nuevo_nombre,
-              "grado": nuevo_grado,
-              "tipo_registro": tipo_reg,
-              "detalles": detalles_reg,
-              "fecha": str(fecha_reg),
-              "archivo": url_generada,
-          }
+          if res_json.get("status") == "success":
+            url_generada = res_json.get("url", "Sin archivo")
 
-          nuevo_df = pd.DataFrame([nuevo_registro])
-          st.session_state.df = pd.concat(
-              [st.session_state.df, nuevo_df], ignore_index=True
-          )
+            nuevo_registro = {
+                "documento": str(nuevo_doc),
+                "nombre": nuevo_nombre,
+                "grado": nuevo_grado,
+                "tipo_registro": tipo_reg,
+                "detalles": detalles_reg,
+                "fecha": str(fecha_reg),
+                "archivo": url_generada,
+            }
 
-          st.success(
-              "¡Registro guardado y archivo subido a Google Drive con éxito!"
-          )
-          st.rerun()
+            nuevo_df = pd.DataFrame([nuevo_registro])
+            st.session_state.df = pd.concat(
+                [st.session_state.df, nuevo_df], ignore_index=True
+            )
+
+            st.success(
+                "¡Registro guardado y archivo subido a Google Drive con éxito!"
+            )
+            st.rerun()
+          else:
+            error_msg = res_json.get("message", "Error desconocido")
+            st.error(f"Google Apps Script rechazó el archivo: {error_msg}")
+
         except Exception as e:
-          st.error(f"Error al conectar con la base de datos en la nube: {e}")
+          st.error(f"Error de conexión con el servidor: {e}")
 
     st.write("---")
     st.write("### Todos los Registros Institucionales")
+    # Tabla general resumen
     st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
+
+    # NUEVO: Lista interactiva para que el docente pueda abrir y ver los documentos de cada estudiante
+    st.write("---")
+    st.write(
+        "### 📂 Visualizar y Descargar Actas (Panel Administrativo de"
+        " Archivos)"
+    )
+    st.info(
+        "Despliega cualquier estudiante para ver sus datos y hacer clic en el"
+        " botón de apertura del archivo:"
+    )
+
+    for index, row in st.session_state.df.iterrows():
+      nombre_est = row.get("nombre", "Estudiante")
+      tipo_reg = row.get("tipo_registro", "Registro")
+      fecha_reg = row.get("fecha", "")
+      grado_reg = row.get("grado", "")
+      doc_reg = row.get("documento", "")
+      detalles_reg = row.get("detalles", "")
+      archivo_reg = row.get("archivo", "Sin archivo")
+
+      with st.expander(f"📁 {nombre_est} - {tipo_reg} ({fecha_reg})"):
+        st.write(f"**Documento:** {doc_reg}")
+        st.write(f"**Grado:** {grado_reg}")
+        st.write(f"**Detalles:** {detalles_reg}")
+        mostrar_evidencia(archivo_reg)
 
   elif password:
     st.error("Contraseña incorrecta. Intente de nuevo.")

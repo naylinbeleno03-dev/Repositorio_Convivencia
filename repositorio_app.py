@@ -92,7 +92,7 @@ st.markdown(
 
 SHEET_ID = "1eUTG3EFoVvRDpycgNv6JdUP_jAa4106SCCNhXIQGFsc"
 url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
-URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxrA7LmF-Rhfi0M0bOW9uEYhCJhUlp_dOxmSkFlM7Rgi-S-zWob44_V1JWjLH9u9ZZFlA/exec"
+URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzgB12SlCCEdIoTxyqIBNYiBX_iimshPGe9nntUFOLCAE0BCKiuViyDnv03wuUTGeu11Q/exec"
 
 if "df" not in st.session_state:
   try:

@@ -1,12 +1,9 @@
-import base64
-from datetime import date
+from datetime import date, datetime
 import os
 import pandas as pd
 import requests
 import streamlit as st
-
-# Crear carpeta para almacenar los documentos firmados si no existe
-os.makedirs("documentos_firmados", exist_ok=True)
+from zoneinfo import ZoneInfo
 
 # Configuración de la página
 st.set_page_config(
@@ -166,56 +163,24 @@ st.sidebar.markdown(
 )
 
 
-# Función para mostrar la vista previa y botón de descarga del archivo subido
-def mostrar_evidencia(nombre_archivo, index_key):
-  if nombre_archivo and str(nombre_archivo).strip() not in [
+# Función para mostrar el botón interactivo que abre el documento de Google Drive
+def mostrar_evidencia(link_archivo):
+  if link_archivo and str(link_archivo).strip() not in [
       "Sin archivo",
       "nan",
       "None",
       "",
   ]:
-    ruta_archivo = os.path.join("documentos_firmados", str(nombre_archivo))
-
-    if os.path.exists(ruta_archivo):
-      st.markdown(f"**📎 Archivo Adjunto:** `{nombre_archivo}`")
-      ext = str(nombre_archivo).lower().split(".")[-1]
-
-      # Si es imagen (JPG/PNG), mostrarla directamente
-      if ext in ["jpg", "jpeg", "png"]:
-        st.image(
-            ruta_archivo,
-            caption=f"Evidencia: {nombre_archivo}",
-            use_container_width=True,
-        )
-
-      # Si es un documento PDF, desplegar visor interactivo
-      elif ext == "pdf":
-        try:
-          with open(ruta_archivo, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-          pdf_display = (
-              f'<iframe src="data:application/pdf;base64,{base64_pdf}"'
-              ' width="100%" height="450px"'
-              ' type="application/pdf"></iframe>'
-          )
-          st.markdown(pdf_display, unsafe_allow_html=True)
-        except Exception:
-          st.info("Vista previa no disponible para este PDF.")
-
-      # Botón para descargar el documento
-      with open(ruta_archivo, "rb") as archivo_pdf:
-        st.download_button(
-            label=f"📄 Descargar Acta Firmada Evidencia ({nombre_archivo})",
-            data=archivo_pdf,
-            file_name=str(nombre_archivo),
-            mime="application/octet-stream",
-            key=f"btn_{index_key}",
-        )
-    else:
-      st.info(
-          f"📄 Archivo registrado: `{nombre_archivo}` (No encontrado en el"
-          " servidor local)."
+    st.markdown("---")
+    if str(link_archivo).startswith("http"):
+      st.markdown("**📄 Evidencia o Acta Firmada en la Nube:**")
+      st.link_button(
+          "🔗 Abrir y Ver Documento Firmado",
+          link_archivo,
+          use_container_width=True,
       )
+    else:
+      st.info(f"📄 Archivo registrado: `{link_archivo}`")
 
 
 if rol == "Estudiante":
@@ -237,9 +202,7 @@ if rol == "Estudiante":
             f" **Fecha:** {row['fecha']} |  **Tipo:**"
             f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
         )
-
-        # Mostrar vista previa y/o botón de descarga
-        mostrar_evidencia(row["archivo"], f"est_{index}")
+        mostrar_evidencia(row["archivo"])
     else:
       st.warning(
           "No se encontraron registros asociados con ese documento o nombre."
@@ -266,9 +229,7 @@ elif rol == "Padre de Familia / Acudiente":
             f" **Fecha:** {row['fecha']} |  **Tipo:**"
             f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
-
-        # Mostrar vista previa y/o botón de descarga
-        mostrar_evidencia(row["archivo"], f"padre_{index}")
+        mostrar_evidencia(row["archivo"])
     else:
       st.warning("No se hallaron registros para el estudiante indicado.")
 
@@ -276,7 +237,6 @@ elif rol == "Docente / Directivo":
   st.subheader("Panel Administrativo")
   password = st.text_input("Ingrese la contraseña institucional:", type="password")
 
-  # Contraseña configurable
   if password == "Sagracor15*":
     st.success(
         "Acceso concedido. Puede administrar la información del repositorio."
@@ -291,7 +251,12 @@ elif rol == "Docente / Directivo":
           "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
       )
       detalles_reg = st.text_area("Descripción de los hechos y compromisos")
-      fecha_reg = st.date_input("Fecha", max_value=date.today())
+
+      # Fecha actual exacta ajustada a Colombia (evita que se adelante al día siguiente)
+      hoy_colombia = datetime.now(ZoneInfo("America/Bogota")).date()
+      fecha_reg = st.date_input(
+          "Fecha", value=hoy_colombia, max_value=hoy_colombia
+      )
 
       # Campo para subir el documento escaneado con firmas
       archivo_subido = st.file_uploader(
@@ -302,18 +267,17 @@ elif rol == "Docente / Directivo":
       submit = st.form_submit_button("Guardar en el Sistema")
 
       if submit:
-        nombre_archivo_guardado = "Sin archivo"
+        file_name = ""
+        mime_type = ""
+        file_data_b64 = ""
 
-        # Procesar el archivo si el docente lo subió
         if archivo_subido is not None:
-          nombre_archivo_guardado = archivo_subido.name
-          ruta_destino = os.path.join(
-              "documentos_firmados", nombre_archivo_guardado
+          file_name = archivo_subido.name
+          mime_type = archivo_subido.type
+          file_data_b64 = base64.b64encode(archivo_subido.getvalue()).decode(
+              "utf-8"
           )
-          with open(ruta_destino, "wb") as f:
-            f.write(archivo_subido.getbuffer())
 
-        # Enviar datos automáticamente a Google Sheets mediante Apps Script
         datos_a_enviar = {
             "documento": str(nuevo_doc),
             "nombre": nuevo_nombre,
@@ -321,22 +285,37 @@ elif rol == "Docente / Directivo":
             "tipo_registro": tipo_reg,
             "detalles": detalles_reg,
             "fecha": str(fecha_reg),
-            "archivo": nombre_archivo_guardado,
+            "fileName": file_name,
+            "mimeType": mime_type,
+            "fileData": file_data_b64,
         }
 
         try:
-          requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
+          # Enviar a Apps Script y capturar la respuesta con la URL generada
+          response = requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
+          res_json = response.json()
+          url_generada = res_json.get("url", "Sin archivo")
 
-          # Agregar inmediatamente el registro a la tabla en memoria de Streamlit
-          nuevo_df = pd.DataFrame([datos_a_enviar])
+          # Crear registro local con la URL correcta para que aparezca de inmediato
+          nuevo_registro = {
+              "documento": str(nuevo_doc),
+              "nombre": nuevo_nombre,
+              "grado": nuevo_grado,
+              "tipo_registro": tipo_reg,
+              "detalles": detalles_reg,
+              "fecha": str(fecha_reg),
+              "archivo": url_generada,
+          }
+
+          nuevo_df = pd.DataFrame([nuevo_registro])
           st.session_state.df = pd.concat(
               [st.session_state.df, nuevo_df], ignore_index=True
           )
 
           st.success(
-              "¡Registro guardado y reflejado en el sistema exitosamente!"
+              "¡Registro guardado y archivo subido a Google Drive con éxito!"
           )
-          st.rerun()  # Recarga la aplicación para actualizar la vista al instante
+          st.rerun()
         except Exception as e:
           st.error(f"Error al conectar con la base de datos en la nube: {e}")
 

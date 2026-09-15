@@ -19,19 +19,58 @@ st.markdown(
         background-color: #F3F4F6 !important;
         color: #1F2937 !important;
     }
+    
+    /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
-        background-color: #475569 !important;
+        background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
     }
+
     section[data-testid="stSidebar"] h1, 
     section[data-testid="stSidebar"] h2, 
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] li,
-    section[data-testid="stSidebar"] a {
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
         color: #FFFFFF !important;
     }
+
+    /* Estilo robusto para el expander en la barra lateral */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] {
+        background-color: #334155 !important;
+        border: 1px solid #475569 !important;
+        border-radius: 8px !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] details {
+        background-color: #334155 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {
+        color: #FDE047 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] p,
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] li {
+        color: #F1F5F9 !important;
+        font-size: 0.9rem !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] a {
+        color: #FDE047 !important;
+        text-decoration: underline !important;
+        font-weight: 600 !important;
+    }
+
     .header-box {
         background-color: #0F172A !important;
         padding: 22px;
@@ -40,19 +79,21 @@ st.markdown(
         box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
+    
     .header-box h1 {
         color: #FFFFFF !important;
         margin: 0 !important;
         font-size: 1.65rem !important;
         font-weight: 600 !important;
     }
-    /* SOLUCIÓN: Forzar mayor especificidad para que el párrafo del header sea blanco */
+
     .stMarkdown .header-box p, .header-box p {
         color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
+
     .stButton>button {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
@@ -61,24 +102,28 @@ st.markdown(
         font-weight: 600 !important;
         padding: 8px 16px !important;
     }
+
     .stButton>button:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
+
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
     }
-    /* Excepción para que el p del header-box dentro de stMarkdown no coja el color oscuro */
+
     .stMarkdown .header-box p {
         color: #FFFFFF !important;
     }
+
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
         background-color: #FFFFFF !important;
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
     }
+
     hr {
         border-color: #64748B !important;
     }
@@ -86,7 +131,6 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
-
 # Encabezado superior
 st.markdown(
     """

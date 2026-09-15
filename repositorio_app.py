@@ -46,6 +46,7 @@ st.markdown(
         font-size: 1.65rem !important;
         font-weight: 600 !important;
     }
+    /* SOLUCIÓN: Forzar mayor especificidad para que el párrafo del header sea blanco */
     .stMarkdown .header-box p, .header-box p {
         color: #FFFFFF !important;
         margin-top: 6px !important;
@@ -68,6 +69,7 @@ st.markdown(
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
     }
+    /* Excepción para que el p del header-box dentro de stMarkdown no coja el color oscuro */
     .stMarkdown .header-box p {
         color: #FFFFFF !important;
     }
@@ -101,24 +103,24 @@ url_csv = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbyXVhL0eaD_ZYAMQxPMlzYOKIxHEy3OfTHVI7k6iv8Izcns7HYRtfS81zbDohwv2yZL/exec"
 
 if "df" not in st.session_state:
-    try:
-        df_temp = pd.read_csv(url_csv)
-        df_temp.columns = [str(col).strip().lower() for col in df_temp.columns]
-        if "archivo" not in df_temp.columns:
-            df_temp["archivo"] = "Sin archivo"
-        st.session_state.df = df_temp
-    except Exception:
-        st.session_state.df = pd.DataFrame(
-            columns=[
-                "documento",
-                "nombre",
-                "grado",
-                "tipo_registro",
-                "detalles",
-                "fecha",
-                "archivo",
-            ]
-        )
+  try:
+    df_temp = pd.read_csv(url_csv)
+    df_temp.columns = [str(col).strip().lower() for col in df_temp.columns]
+    if "archivo" not in df_temp.columns:
+      df_temp["archivo"] = "Sin archivo"
+    st.session_state.df = df_temp
+  except Exception:
+    st.session_state.df = pd.DataFrame(
+        columns=[
+            "documento",
+            "nombre",
+            "grado",
+            "tipo_registro",
+            "detalles",
+            "fecha",
+            "archivo",
+        ]
+    )
 
 df = st.session_state.df
 
@@ -131,197 +133,198 @@ rol = st.sidebar.selectbox(
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Asistente Virtual")
 st.sidebar.markdown(
-    "[Abrir Chatbot de Convivencia](https://chatbot-convivencia-sena-edehd4uhj9lkziarpaexb2.streamlit.app/)"
+    "[Abrir Chatbot de"
+    " Convivencia](https://chatbot-convivencia-sena-edehd4uhj9lkziarpaexb2.streamlit.app/)"
 )
 
 
 def mostrar_evidencia(link_archivo):
-    if link_archivo and str(link_archivo).strip() not in [
-        "Sin archivo",
-        "nan",
-        "None",
-        "",
-    ]:
-        st.markdown("---")
-        if str(link_archivo).startswith("http"):
-            st.markdown("**Evidencia o Acta Firmada en la Nube:**")
-            st.link_button(
-                "Abrir y Ver Documento Firmado",
-                link_archivo,
-                use_container_width=True,
-            )
-        else:
-            st.info(f"Archivo registrado: `{link_archivo}`")
+  if link_archivo and str(link_archivo).strip() not in [
+      "Sin archivo",
+      "nan",
+      "None",
+      "",
+  ]:
+    st.markdown("---")
+    if str(link_archivo).startswith("http"):
+      st.markdown("**Evidencia o Acta Firmada en la Nube:**")
+      st.link_button(
+          "Abrir y Ver Documento Firmado",
+          link_archivo,
+          use_container_width=True,
+      )
+    else:
+      st.info(f"Archivo registrado: `{link_archivo}`")
 
 
 if rol == "Estudiante":
-    st.subheader("Portal de Estudiante")
-    doc_input = st.text_input(
-        "Ingrese su Tarjeta de Identidad o Nombre completo:"
-    )
+  st.subheader("Portal de Estudiante")
+  doc_input = st.text_input(
+      "Ingrese su Tarjeta de Identidad o Nombre completo:"
+  )
 
-    if doc_input:
-        resultado = df[
-            df["documento"].astype(str).str.contains(doc_input, case=False, na=False)
-            | df["nombre"].str.contains(doc_input, case=False, na=False)
-        ]
+  if doc_input:
+    resultado = df[
+        df["documento"].astype(str).str.contains(doc_input, case=False, na=False)
+        | df["nombre"].str.contains(doc_input, case=False, na=False)
+    ]
 
-        if not resultado.empty:
-            st.success("Registros encontrados en el sistema:")
-            for index, row in resultado.iterrows():
-                # Encabezado destacado con el tipo de registro
-                st.markdown(f"### 📋 {row['tipo_registro']}")
-                st.info(
-                    f"**Fecha:** {row['fecha']} | **Grado:** {row['grado']}\n\n**Detalles:** {row['detalles']}"
-                )
-                mostrar_evidencia(row["archivo"])
-                st.markdown("---")
-        else:
-            st.warning(
-                "No se encontraron registros asociados con ese documento o nombre."
-            )
+    if not resultado.empty:
+      st.success("Registros encontrados en el sistema:")
+      for index, row in resultado.iterrows():
+        st.info(
+            f" **Fecha:** {row['fecha']} |  **Tipo:**"
+            f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
+        )
+        mostrar_evidencia(row["archivo"])
+    else:
+      st.warning(
+          "No se encontraron registros asociados con ese documento o nombre."
+      )
 
 elif rol == "Padre de Familia / Acudiente":
-    st.subheader("Portal de Acudiente")
-    doc_hijo = st.text_input(
-        "Ingrese la Tarjeta de Identidad o Nombre completo del estudiante a su cargo:"
-    )
+  st.subheader("Portal de Acudiente")
+  doc_hijo = st.text_input(
+      "Ingrese la Tarjeta de Identidad o Nombre completo del estudiante a su"
+      " cargo:"
+  )
 
-    if doc_hijo:
-        resultado = df[
-            df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
-            | df["nombre"].str.contains(doc_hijo, case=False, na=False)
-        ]
+  if doc_hijo:
+    resultado = df[
+        df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
+        | df["nombre"].str.contains(doc_hijo, case=False, na=False)
+    ]
 
-        if not resultado.empty:
-            st.success("Registros del estudiante:")
-            for index, row in resultado.iterrows():
-                # Encabezado destacado con el tipo de registro
-                st.markdown(f"### 📋 {row['tipo_registro']}")
-                st.info(
-                    f"**Estudiante:** {row['nombre']} ({row['grado']})\n"
-                    f"**Fecha:** {row['fecha']}\n\n**Detalles:** {row['detalles']}"
-                )
-                mostrar_evidencia(row["archivo"])
-                st.markdown("---")
-        else:
-            st.warning("No se hallaron registros para el estudiante indicado.")
+    if not resultado.empty:
+      st.success("Registros del estudiante:")
+      for index, row in resultado.iterrows():
+        st.info(
+            f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
+            f" **Fecha:** {row['fecha']} |  **Tipo:**"
+            f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
+        )
+        mostrar_evidencia(row["archivo"])
+    else:
+      st.warning("No se hallaron registros para el estudiante indicado.")
 
 elif rol == "Docente / Directivo":
-    st.subheader("Panel Administrativo")
-    password = st.text_input("Ingrese la contraseña institucional:", type="password")
+  st.subheader("Panel Administrativo")
+  password = st.text_input("Ingrese la contraseña institucional:", type="password")
 
-    if password == "Sagracor15*":
-        st.success(
-            "Acceso concedido. Puede administrar la información del repositorio."
-        )
+  if password == "Sagracor15*":
+    st.success(
+        "Acceso concedido. Puede administrar la información del repositorio."
+    )
 
-        with st.form("form_agregar"):
-            st.write("### Agregar Nuevo Registro al Repositorio")
-            nuevo_doc = st.text_input("Documento del Estudiante")
-            nuevo_nombre = st.text_input("Nombre Completo")
-            nuevo_grado = st.text_input("Grado y Curso")
-            tipo_reg = st.selectbox(
-                "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
+    with st.form("form_agregar"):
+      st.write("### Agregar Nuevo Registro al Repositorio")
+      nuevo_doc = st.text_input("Documento del Estudiante")
+      nuevo_nombre = st.text_input("Nombre Completo")
+      nuevo_grado = st.text_input("Grado y Curso")
+      tipo_reg = st.selectbox(
+          "Tipo de Registro", ["Acta de Compromiso", "Observador de Convivencia"]
+      )
+      detalles_reg = st.text_area("Descripción de los hechos y compromisos")
+
+      hoy_colombia = datetime.now(ZoneInfo("America/Bogota")).date()
+      fecha_reg = st.date_input(
+          "Fecha", value=hoy_colombia, max_value=hoy_colombia
+      )
+
+      archivo_subido = st.file_uploader(
+          "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
+          type=["pdf", "png", "jpg", "jpeg"],
+      )
+
+      submit = st.form_submit_button("Guardar en el Sistema")
+
+      if submit:
+        file_name = ""
+        mime_type = ""
+        file_data_b64 = ""
+
+        if archivo_subido is not None:
+          file_name = archivo_subido.name
+          mime_type = archivo_subido.type
+          file_data_b64 = base64.b64encode(archivo_subido.getvalue()).decode(
+              "utf-8"
+          )
+
+        datos_a_enviar = {
+            "documento": str(nuevo_doc),
+            "nombre": nuevo_nombre,
+            "grado": nuevo_grado,
+            "tipo_registro": tipo_reg,
+            "detalles": detalles_reg,
+            "fecha": str(fecha_reg),
+            "fileName": file_name,
+            "mimeType": mime_type,
+            "fileData": file_data_b64,
+        }
+
+        try:
+          response = requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
+          res_json = response.json()
+
+          if res_json.get("status") == "success":
+            url_generada = res_json.get("url", "Sin archivo")
+
+            nuevo_registro = {
+                "documento": str(nuevo_doc),
+                "nombre": nuevo_nombre,
+                "grado": nuevo_grado,
+                "tipo_registro": tipo_reg,
+                "detalles": detalles_reg,
+                "fecha": str(fecha_reg),
+                "archivo": url_generada,
+            }
+
+            nuevo_df = pd.DataFrame([nuevo_registro])
+            st.session_state.df = pd.concat(
+                [st.session_state.df, nuevo_df], ignore_index=True
             )
-            detalles_reg = st.text_area("Descripción de los hechos y compromisos")
 
-            hoy_colombia = datetime.now(ZoneInfo("America/Bogota")).date()
-            fecha_reg = st.date_input(
-                "Fecha", value=hoy_colombia, max_value=hoy_colombia
+            st.success(
+                "¡Registro guardado y archivo subido a Google Drive con éxito!"
             )
+            st.rerun()
+          else:
+            error_msg = res_json.get("message", "Error desconocido")
+            st.error(f"Google Apps Script rechazó el archivo: {error_msg}")
 
-            archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
-                type=["pdf", "png", "jpg", "jpeg"],
-            )
+        except Exception as e:
+          st.error(f"Error de conexión con el servidor: {e}")
 
-            submit = st.form_submit_button("Guardar en el Sistema")
+    st.write("---")
+    st.write("### Todos los Registros Institucionales")
+    # Tabla general resumen
+    st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
 
-            if submit:
-                file_name = ""
-                mime_type = ""
-                file_data_b64 = ""
+    # NUEVO: Lista interactiva para que el docente pueda abrir y ver los documentos de cada estudiante
+    st.write("---")
+    st.write(
+        "### Visualizar y Descargar Actas (Panel Administrativo de"
+        " Archivos)"
+    )
+    st.info(
+        "Despliega cualquier estudiante para ver sus datos y hacer clic en el"
+        " botón de apertura del archivo:"
+    )
 
-                if archivo_subido is not None:
-                    file_name = archivo_subido.name
-                    mime_type = archivo_subido.type
-                    file_data_b64 = base64.b64encode(archivo_subido.getvalue()).decode(
-                        "utf-8"
-                    )
+    for index, row in st.session_state.df.iterrows():
+      nombre_est = row.get("nombre", "Estudiante")
+      tipo_reg = row.get("tipo_registro", "Registro")
+      fecha_reg = row.get("fecha", "")
+      grado_reg = row.get("grado", "")
+      doc_reg = row.get("documento", "")
+      detalles_reg = row.get("detalles", "")
+      archivo_reg = row.get("archivo", "Sin archivo")
 
-                datos_a_enviar = {
-                    "documento": str(nuevo_doc),
-                    "nombre": nuevo_nombre,
-                    "grado": nuevo_grado,
-                    "tipo_registro": tipo_reg,
-                    "detalles": detalles_reg,
-                    "fecha": str(fecha_reg),
-                    "fileName": file_name,
-                    "mimeType": mime_type,
-                    "fileData": file_data_b64,
-                }
+      with st.expander(f" {nombre_est} - {tipo_reg} ({fecha_reg})"):
+        st.write(f"**Documento:** {doc_reg}")
+        st.write(f"**Grado:** {grado_reg}")
+        st.write(f"**Detalles:** {detalles_reg}")
+        mostrar_evidencia(archivo_reg)
 
-                try:
-                    response = requests.post(URL_APPS_SCRIPT, json=datos_a_enviar)
-                    res_json = response.json()
-
-                    if res_json.get("status") == "success":
-                        url_generada = res_json.get("url", "Sin archivo")
-
-                        nuevo_registro = {
-                            "documento": str(nuevo_doc),
-                            "nombre": nuevo_nombre,
-                            "grado": nuevo_grado,
-                            "tipo_registro": tipo_reg,
-                            "detalles": detalles_reg,
-                            "fecha": str(fecha_reg),
-                            "archivo": url_generada,
-                        }
-
-                        nuevo_df = pd.DataFrame([nuevo_registro])
-                        st.session_state.df = pd.concat(
-                            [st.session_state.df, nuevo_df], ignore_index=True
-                        )
-
-                        st.success(
-                            "¡Registro guardado y archivo subido a Google Drive con éxito!"
-                        )
-                        st.rerun()
-                    else:
-                        error_msg = res_json.get("message", "Error desconocido")
-                        st.error(f"Google Apps Script rechazó el archivo: {error_msg}")
-
-                except Exception as e:
-                    st.error(f"Error de conexión con el servidor: {e}")
-
-        st.write("---")
-        st.write("### Todos los Registros Institucionales")
-        st.dataframe(st.session_state.df, use_container_width=True, hide_index=True)
-
-        st.write("---")
-        st.write(
-            "### Visualizar y Descargar Actas (Panel Administrativo de Archivos)"
-        )
-        st.info(
-            "Despliega cualquier estudiante para ver sus datos y hacer clic en el botón de apertura del archivo:"
-        )
-
-        for index, row in st.session_state.df.iterrows():
-            nombre_est = row.get("nombre", "Estudiante")
-            tipo_reg = row.get("tipo_registro", "Registro")
-            fecha_reg = row.get("fecha", "")
-            grado_reg = row.get("grado", "")
-            doc_reg = row.get("documento", "")
-            detalles_reg = row.get("detalles", "")
-            archivo_reg = row.get("archivo", "Sin archivo")
-
-            # Encabezado claro dentro del expandible del panel administrativo
-            with st.expander(f"📋 [{tipo_reg.upper()}] - {nombre_est} ({fecha_reg})"):
-                st.write(f"**Documento:** {doc_reg}")
-                st.write(f"**Grado:** {grado_reg}")
-                st.write(f"**Detalles:** {detalles_reg}")
-                mostrar_evidencia(archivo_reg)
-
-    elif password:
-        st.error("Contraseña incorrecta. Intente de nuevo.")
+  elif password:
+    st.error("Contraseña incorrecta. Intente de nuevo.")

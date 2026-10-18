@@ -171,7 +171,7 @@ df = st.session_state.df
 st.sidebar.header("Panel de Control")
 rol = st.sidebar.selectbox(
     "Seleccione su perfil:",
-    ["Estudiante", "Docente / Directivo"],
+    ["Padre de Familia / Acudiente", "Docente / Directivo"],
 )
 
 st.sidebar.markdown("---")
@@ -201,30 +201,30 @@ def mostrar_evidencia(link_archivo):
       st.info(f"Archivo registrado: `{link_archivo}`")
 
 
-if rol == "Estudiante":
-  st.subheader("Portal de Estudiante")
-  doc_input = st.text_input(
-      "Ingrese su Tarjeta de Identidad o Nombre completo:"
+if rol == "Padre de Familia / Acudiente":
+  st.subheader("Portal de Acudiente")
+  doc_hijo = st.text_input(
+      "Ingrese la Tarjeta de Identidad o Nombre completo del estudiante a su"
+      " cargo:"
   )
 
-  if doc_input:
+  if doc_hijo:
     resultado = df[
-        df["documento"].astype(str).str.contains(doc_input, case=False, na=False)
-        | df["nombre"].str.contains(doc_input, case=False, na=False)
+        df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
+        | df["nombre"].str.contains(doc_hijo, case=False, na=False)
     ]
 
     if not resultado.empty:
-      st.success("Registros encontrados en el sistema:")
+      st.success("Registros del estudiante:")
       for index, row in resultado.iterrows():
         st.info(
+            f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
             f" **Fecha:** {row['fecha']} |  **Tipo:**"
-            f" {row['tipo_registro']}\n\n**Detalles:** {row['detalles']}"
+            f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
         )
         mostrar_evidencia(row["archivo"])
     else:
-      st.warning(
-          "No se encontraron registros asociados con ese documento o nombre."
-      )
+      st.warning("No se hallaron registros para el estudiante indicado.")
 
 elif rol == "Docente / Directivo":
   st.subheader("Panel Administrativo")

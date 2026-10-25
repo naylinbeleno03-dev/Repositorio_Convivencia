@@ -11,31 +11,33 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con fondo oscuro, textos claros y botones completamente funcionales y legibles
+# Estilos CSS optimizados con la misma base limpia del Chatbot
 st.markdown(
     """
     <style>
     .stApp {
-        background-color: #0F172A !important;
-        color: #F1F5F9 !important;
+        background-color: #F3F4F6 !important;
+        color: #1F2937 !important;
     }
     
-    /* Textos generales y etiquetas legibles en fondo oscuro */
-    p, span, label, h1, h2, h3, h4, h5, h6, .stMarkdown {
-        color: #F1F5F9 !important;
-    }
-
-    /* Barra lateral */
+    /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
     }
 
-    section[data-testid="stSidebar"] * {
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] li,
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
         color: #FFFFFF !important;
     }
 
-    /* Estilo para el expander en la barra lateral */
+    /* Estilo robusto para el expander en la barra lateral */
     section[data-testid="stSidebar"] div[data-testid="stExpander"] {
         background-color: #334155 !important;
         border: 1px solid #475569 !important;
@@ -69,55 +71,84 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-    /* Caja de encabezado con letras SIEMPRE en blanco */
     .header-box {
-        background-color: #1E293B !important;
+        background-color: #0F172A !important;
         padding: 22px;
         border-radius: 12px;
         border-left: 6px solid #D4AF37;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
     
-    .header-box h1, 
-    .header-box p {
+    .header-box h1 {
         color: #FFFFFF !important;
+        margin: 0 !important;
+        font-size: 1.65rem !important;
+        font-weight: 600 !important;
     }
 
-    /* BOTONES ROBUSTOS Y LEGIBLES (Fondo dorado y texto oscuro para contraste perfecto) */
+    .header-box p {
+        color: #FFFFFF !important;
+        margin-top: 6px !important;
+        margin-bottom: 0 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Estructura limpia de botones para evitar el color azul en modo oscuro */
     .stButton>button, 
     div[data-testid="stDownloadButton"]>button, 
     .stFormSubmitButton>button, 
-    a[data-testid="stLinkButton"] {
-        background-color: #D4AF37 !important;
-        color: #0F172A !important;
-        border: none !important;
+    a[data-testid="stLinkButton"],
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="baseButton-primary"] {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        border: 1px solid #0F172A !important;
         border-radius: 8px !important;
-        font-weight: 700 !important;
+        font-weight: 600 !important;
         padding: 8px 16px !important;
     }
 
-    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
-    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
-    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
-        color: #0F172A !important;
+    .stButton>button p, 
+    div[data-testid="stDownloadButton"]>button p,
+    .stButton>button span, 
+    div[data-testid="stDownloadButton"]>button span,
+    .stFormSubmitButton>button p, 
+    .stFormSubmitButton>button span, 
+    a[data-testid="stLinkButton"] span,
+    button[data-testid="baseButton-secondary"] p,
+    button[data-testid="baseButton-primary"] p {
+        color: #FFFFFF !important;
     }
 
     .stButton>button:hover, 
     div[data-testid="stDownloadButton"]>button:hover, 
     .stFormSubmitButton>button:hover, 
-    a[data-testid="stLinkButton"]:hover {
-        background-color: #FDE047 !important;
+    a[data-testid="stLinkButton"]:hover,
+    button[data-testid="baseButton-secondary"]:hover,
+    button[data-testid="baseButton-primary"]:hover {
+        background-color: #D4AF37 !important;
+        color: #0F172A !important;
+        border-color: #D4AF37 !important;
+    }
+
+    .stButton>button:hover p, 
+    div[data-testid="stDownloadButton"]>button:hover p,
+    .stButton>button:hover span, 
+    div[data-testid="stDownloadButton"]>button:hover span,
+    .stFormSubmitButton>button:hover p, 
+    .stFormSubmitButton>button:hover span, 
+    a[data-testid="stLinkButton"]:hover span,
+    button[data-testid="baseButton-secondary"]:hover p,
+    button[data-testid="baseButton-primary"]:hover p {
         color: #0F172A !important;
     }
 
-    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
-    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
-    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
-        color: #0F172A !important;
+    /* Textos estándar sin colores fosforescentes */
+    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
+        color: #1F2937 !important;
     }
 
-    /* Campos de entrada con fondo blanco para visibilidad al escribir */
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
         background-color: #FFFFFF !important;
         color: #000000 !important;
@@ -126,7 +157,7 @@ st.markdown(
     }
 
     hr {
-        border-color: #475569 !important;
+        border-color: #64748B !important;
     }
     </style>
 """,

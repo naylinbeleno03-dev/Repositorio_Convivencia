@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS optimizados con la misma base limpia del Chatbot
+# Estilos CSS optimizados para solucionar el problema de los botones en modo oscuro y al hacer clic
 st.markdown(
     """
     <style>
@@ -94,13 +94,11 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* Estructura limpia de botones: texto fijo en blanco sin cambios en hover o clic */
+    /* ESTILO UNIFICADO Y BLINDADO PARA TODOS LOS BOTONES (Normales, Formularios, Descargas, Links) */
     .stButton>button, 
     div[data-testid="stDownloadButton"]>button, 
     .stFormSubmitButton>button, 
-    a[data-testid="stLinkButton"],
-    button[data-testid="baseButton-secondary"],
-    button[data-testid="baseButton-primary"] {
+    a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -109,34 +107,38 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    /* Forzar que cualquier texto, span o p dentro del botón permanezca en blanco siempre */
+    /* Forzar texto e íconos internos en blanco en estado normal */
     .stButton>button *, 
     div[data-testid="stDownloadButton"]>button *, 
     .stFormSubmitButton>button *, 
-    a[data-testid="stLinkButton"] *,
-    button[data-testid="baseButton-secondary"] *,
-    button[data-testid="baseButton-primary"] * {
+    a[data-testid="stLinkButton"] * {
         color: #FFFFFF !important;
         fill: #FFFFFF !important;
     }
 
-    /* Mantener estilo consistente al pasar el cursor o presionar */
+    /* Estado Hover, Focus y Active (al pasar el mouse, hacer clic o presionar) */
     .stButton>button:hover, 
     div[data-testid="stDownloadButton"]>button:hover, 
     .stFormSubmitButton>button:hover, 
     a[data-testid="stLinkButton"]:hover,
-    .stButton>button:focus,
-    .stButton>button:active {
+    .stButton>button:focus, 
+    .stButton>button:active,
+    .stFormSubmitButton>button:focus,
+    .stFormSubmitButton>button:active {
         background-color: #D4AF37 !important;
+        color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
+    /* Forzar texto oscuro al hacer hover, focus o active para contraste perfecto */
     .stButton>button:hover *, 
     div[data-testid="stDownloadButton"]>button:hover *, 
     .stFormSubmitButton>button:hover *, 
     a[data-testid="stLinkButton"]:hover *,
-    .stButton>button:focus *,
-    .stButton>button:active * {
+    .stButton>button:focus *, 
+    .stButton>button:active *,
+    .stFormSubmitButton>button:focus *,
+    .stFormSubmitButton>button:active * {
         color: #0F172A !important;
         fill: #0F172A !important;
     }
@@ -287,8 +289,8 @@ elif rol == "Docente / Directivo":
             )
 
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX, DOC)",
-                type=["pdf", "png", "jpg", "jpeg", "docx", "doc"],
+                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
+                type=["pdf", "png", "jpg", "jpeg", "docx"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")

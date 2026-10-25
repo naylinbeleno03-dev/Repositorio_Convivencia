@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con corrección absoluta para los estados de enfoque y clic en modo oscuro
+# Estilos CSS con anulación profunda para BaseWeb y estados de clic
 st.markdown(
     """
     <style>
@@ -95,12 +95,13 @@ st.markdown(
     }
 
     /* ==========================================================================
-       CORRECCIÓN ABSOLUTA DE BOTONES (NORMAL, HOVER, FOCUS Y ACTIVE)
+       CORRECCIÓN RADICAL DE BOTONES (Basada en BaseWeb para evitar fondos blancos)
        ========================================================================== */
-    .stButton > button, 
+    div.stButton > button, 
     div[data-testid="stDownloadButton"] > button, 
     .stFormSubmitButton > button, 
-    a[data-testid="stLinkButton"] {
+    a[data-testid="stLinkButton"],
+    button[data-baseweb="button"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -109,55 +110,71 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    .stButton > button *, 
+    div.stButton > button *, 
     div[data-testid="stDownloadButton"] > button *, 
     .stFormSubmitButton > button *, 
-    a[data-testid="stLinkButton"] * {
+    a[data-testid="stLinkButton"] *,
+    button[data-baseweb="button"] * {
         color: #FFFFFF !important;
         fill: #FFFFFF !important;
     }
 
     /* Estado Hover (Al pasar el cursor) */
-    .stButton > button:hover, 
+    div.stButton > button:hover, 
     div[data-testid="stDownloadButton"] > button:hover, 
     .stFormSubmitButton > button:hover, 
-    a[data-testid="stLinkButton"]:hover {
+    a[data-testid="stLinkButton"]:hover,
+    button[data-baseweb="button"]:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
-    .stButton > button:hover *, 
+    div.stButton > button:hover *, 
     div[data-testid="stDownloadButton"] > button:hover *, 
     .stFormSubmitButton > button:hover *, 
-    a[data-testid="stLinkButton"]:hover * {
+    a[data-testid="stLinkButton"]:hover *,
+    button[data-baseweb="button"]:hover * {
         color: #0F172A !important;
         fill: #0F172A !important;
     }
 
-    /* Estado Focus y Active (Al hacer clic o presionar - Evita que se ponga blanco/transparente) */
-    .stButton > button:focus, 
-    .stButton > button:active, 
+    /* Estado Focus, Active y Focus-Visible (Evita el fondo blanco/transparente al presionar) */
+    div.stButton > button:focus, 
+    div.stButton > button:active, 
+    div.stButton > button:focus-visible,
     div[data-testid="stDownloadButton"] > button:focus, 
     div[data-testid="stDownloadButton"] > button:active, 
+    div[data-testid="stDownloadButton"] > button:focus-visible,
     .stFormSubmitButton > button:focus, 
     .stFormSubmitButton > button:active, 
+    .stFormSubmitButton > button:focus-visible,
     a[data-testid="stLinkButton"]:focus, 
-    a[data-testid="stLinkButton"]:active {
+    a[data-testid="stLinkButton"]:active,
+    button[data-baseweb="button"]:focus,
+    button[data-baseweb="button"]:active,
+    button[data-baseweb="button"]:focus-visible {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border-color: #D4AF37 !important;
         box-shadow: 0 0 0 2px #D4AF37 !important;
+        outline: none !important;
     }
 
-    .stButton > button:focus *, 
-    .stButton > button:active *, 
+    div.stButton > button:focus *, 
+    div.stButton > button:active *, 
+    div.stButton > button:focus-visible *,
     div[data-testid="stDownloadButton"] > button:focus *, 
     div[data-testid="stDownloadButton"] > button:active *, 
+    div[data-testid="stDownloadButton"] > button:focus-visible *,
     .stFormSubmitButton > button:focus *, 
     .stFormSubmitButton > button:active *, 
+    .stFormSubmitButton > button:focus-visible *,
     a[data-testid="stLinkButton"]:focus *, 
-    a[data-testid="stLinkButton"]:active * {
+    a[data-testid="stLinkButton"]:active *,
+    button[data-baseweb="button"]:focus *,
+    button[data-baseweb="button"]:active *,
+    button[data-baseweb="button"]:focus-visible * {
         color: #FFFFFF !important;
         fill: #FFFFFF !important;
     }

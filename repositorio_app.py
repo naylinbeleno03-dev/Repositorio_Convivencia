@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con textos oscuros, sólidos y de alta visibilidad
+# Estilos CSS personalizados
 st.markdown(
     """
     <style>
@@ -20,12 +20,7 @@ st.markdown(
         color: #1F2937 !important;
     }
     
-    /* Forzar textos generales oscuros y legibles (evitando tonos claros o fosforescentes) */
-    p, span, label, div, .stMarkdown, .stText, [data-testid="stWidgetLabel"] p {
-        color: #1F2937 !important;
-    }
-
-    /* Barra lateral en azul oscuro elegante con texto blanco */
+    /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
@@ -92,15 +87,15 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-    .header-box p {
+    .stMarkdown .header-box p, .header-box p {
         color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
 
-    /* Estilos para botones y enlaces de acción */
-    .stButton>button, div[data-testid="stDownloadButton"]>button, a[kind="primary"], .stFormSubmitButton>button {
+    /* Botones y enlaces corregidos para asegurar visibilidad */
+    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -109,35 +104,26 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
-    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
-    a[kind="primary"] span, .stFormSubmitButton>button p, .stFormSubmitButton>button span {
+    .stButton>button *, div[data-testid="stDownloadButton"]>button *, .stFormSubmitButton>button *, a[data-testid="stLinkButton"] * {
         color: #FFFFFF !important;
     }
 
-    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, a[kind="primary"]:hover, .stFormSubmitButton>button:hover {
+    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
-    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
-    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
-    a[kind="primary"]:hover span, .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span {
+    .stButton>button:hover *, div[data-testid="stDownloadButton"]>button:hover *, .stFormSubmitButton>button:hover *, a[data-testid="stLinkButton"]:hover * {
         color: #0F172A !important;
     }
 
-    /* Contenedores de notificación (st.info, st.success, etc.) con texto oscuro legible */
-    div[data-testid="stNotification"] {
-        background-color: #FFFFFF !important;
+    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
-        border-left: 5px solid #0F172A !important;
-        border-radius: 8px !important;
-        border: 1px solid #CBD5E1 !important;
     }
 
-    div[data-testid="stNotification"] p, div[data-testid="stNotification"] span, div[data-testid="stNotification"] div {
-        color: #1F2937 !important;
+    .stMarkdown .header-box p {
+        color: #FFFFFF !important;
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
@@ -145,32 +131,6 @@ st.markdown(
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
-    }
-
-    /* Estilo visible para el área de carga de archivos (st.file_uploader) */
-    [data-testid="stFileUploader"] {
-        background-color: #FFFFFF !important;
-        border: 2px dashed #0F172A !important;
-        border-radius: 10px;
-        padding: 12px;
-    }
-
-    [data-testid="stFileUploader"] section {
-        background-color: #FFFFFF !important;
-    }
-
-    [data-testid="stFileUploader"] span, [data-testid="stFileUploader"] p, [data-testid="stFileUploader"] small {
-        color: #1F2937 !important;
-    }
-
-    [data-testid="stFileUploader"] button {
-        background-color: #0F172A !important;
-        color: #FFFFFF !important;
-        border-radius: 6px;
-    }
-
-    [data-testid="stFileUploader"] button span {
-        color: #FFFFFF !important;
     }
 
     hr {
@@ -232,12 +192,6 @@ st.sidebar.markdown(
 )
 
 
-def limpiar_texto_detalles(texto):
-    if not texto or str(texto).strip().lower() in ["nan", "none", "", "null"]:
-        return "Sin observaciones adicionales registradas."
-    return str(texto).strip()
-
-
 def mostrar_evidencia(link_archivo):
     if link_archivo and str(link_archivo).strip() not in [
         "Sin archivo",
@@ -267,19 +221,18 @@ if rol == "Padre de Familia / Acudiente":
     if doc_hijo:
         resultado = df[
             df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
-            | df["nombre"].astype(str).str.contains(doc_hijo, case=False, na=False)
+            | df["nombre"].str.contains(doc_hijo, case=False, na=False)
         ]
 
         if not resultado.empty:
             st.success("Registros del estudiante:")
             for index, row in resultado.iterrows():
-                detalles_limpios = limpiar_texto_detalles(row.get("detalles", ""))
                 st.info(
-                    f" **Estudiante:** {row.get('nombre', 'Estudiante')} ({row.get('grado', 'N/A')})\n"
-                    f" **Fecha:** {row.get('fecha', 'N/A')} | **Tipo:**"
-                    f" {row.get('tipo_registro', 'Registro')}\n**Detalles:** {detalles_limpios}"
+                    f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
+                    f" **Fecha:** {row['fecha']} |  **Tipo:**"
+                    f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
                 )
-                mostrar_evidencia(row.get("archivo", ""))
+                mostrar_evidencia(row["archivo"])
         else:
             st.warning("No se hallaron registros para el estudiante indicado.")
 
@@ -307,10 +260,9 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
-            # Cargador actualizado con etiqueta clara y visible (Incluye PDF, PNG, JPG, DOCX)
             archivo_subido = st.file_uploader(
-                "Descargar / Cargar Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
-                type=["pdf", "png", "jpg", "jpeg", "docx"],
+                "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
+                type=["pdf", "png", "jpg", "jpeg"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")
@@ -327,14 +279,12 @@ elif rol == "Docente / Directivo":
                         "utf-8"
                     )
 
-                detalles_enviar = limpiar_texto_detalles(detalles_reg)
-
                 datos_a_enviar = {
                     "documento": str(nuevo_doc),
                     "nombre": nuevo_nombre,
                     "grado": nuevo_grado,
                     "tipo_registro": tipo_reg,
-                    "detalles": detalles_enviar,
+                    "detalles": detalles_reg,
                     "fecha": str(fecha_reg),
                     "fileName": file_name,
                     "mimeType": mime_type,
@@ -353,7 +303,7 @@ elif rol == "Docente / Directivo":
                             "nombre": nuevo_nombre,
                             "grado": nuevo_grado,
                             "tipo_registro": tipo_reg,
-                            "detalles": detalles_enviar,
+                            "detalles": detalles_reg,
                             "fecha": str(fecha_reg),
                             "archivo": url_generada,
                         }
@@ -394,7 +344,7 @@ elif rol == "Docente / Directivo":
             fecha_reg = row.get("fecha", "")
             grado_reg = row.get("grado", "")
             doc_reg = row.get("documento", "")
-            detalles_reg = limpiar_texto_detalles(row.get("detalles", ""))
+            detalles_reg = row.get("detalles", "")
             archivo_reg = row.get("archivo", "Sin archivo")
 
             with st.expander(f" {nombre_est} - {tipo_reg} ({fecha_reg})"):

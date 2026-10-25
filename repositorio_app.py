@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con corrección radical para los botones en modo oscuro y claro
+# Estilos CSS con corrección precisa para los estados de los botones al presionar
 st.markdown(
     """
     <style>
@@ -95,29 +95,25 @@ st.markdown(
     }
 
     /* ==========================================================================
-       CORRECCIÓN TOTAL Y DEFINITIVA DE BOTONES (Normal, Hover, Focus, Active)
+       ESTILOS DE BOTONES: Normal, Hover y al Presionar (Active / Focus)
        ========================================================================== */
     div.stButton > button, 
     div.stDownloadButton > button, 
     div.stFormSubmitButton > button, 
-    a[data-testid="stLinkButton"],
-    button[kind="primary"],
-    button[kind="secondary"] {
+    a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
-        border: 1px solid #0F172A !important;
+        border: 2px solid #0F172A !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
         padding: 8px 16px !important;
+        transition: all 0.2s ease-in-out !important;
     }
 
-    /* Forzar texto blanco en cualquier elemento interno del botón */
     div.stButton > button *, 
     div.stDownloadButton > button *, 
     div.stFormSubmitButton > button *, 
-    a[data-testid="stLinkButton"] *,
-    button[kind="primary"] *,
-    button[kind="secondary"] * {
+    a[data-testid="stLinkButton"] * {
         color: #FFFFFF !important;
     }
 
@@ -125,51 +121,44 @@ st.markdown(
     div.stButton > button:hover, 
     div.stDownloadButton > button:hover, 
     div.stFormSubmitButton > button:hover, 
-    a[data-testid="stLinkButton"]:hover,
-    button[kind="primary"]:hover,
-    button[kind="secondary"]:hover {
-        background-color: #D4AF37 !important;
-        color: #0F172A !important;
+    a[data-testid="stLinkButton"]:hover {
+        background-color: #1E293B !important;
+        color: #D4AF37 !important;
         border-color: #D4AF37 !important;
+        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3) !important;
     }
 
     div.stButton > button:hover *, 
     div.stDownloadButton > button:hover *, 
     div.stFormSubmitButton > button:hover *, 
-    a[data-testid="stLinkButton"]:hover *,
-    button[kind="primary"]:hover *,
-    button[kind="secondary"]:hover * {
-        color: #0F172A !important;
+    a[data-testid="stLinkButton"]:hover * {
+        color: #D4AF37 !important;
     }
 
-    /* Al hacer clic o mantener presionado (Focus y Active - Evita que se ponga blanco) */
-    div.stButton > button:focus, 
+    /* AL PRESIONAR (Active / Focus) -> Se vuelve Dorado con texto oscuro y brillo exterior */
     div.stButton > button:active, 
-    div.stDownloadButton > button:focus, 
+    div.stButton > button:focus, 
     div.stDownloadButton > button:active, 
-    div.stFormSubmitButton > button:focus, 
-    div.stFormSubmitButton > button:active,
-    a[data-testid="stLinkButton"]:focus,
+    div.stDownloadButton > button:focus, 
+    div.stFormSubmitButton > button:active, 
+    div.stFormSubmitButton > button:focus,
     a[data-testid="stLinkButton"]:active,
-    button[kind="primary"]:focus,
-    button[kind="primary"]:active {
-        background-color: #0F172A !important;
-        color: #FFFFFF !important;
-        border-color: #D4AF37 !important;
-        box-shadow: 0 0 0 2px #D4AF37 !important;
+    a[data-testid="stLinkButton"]:focus {
+        background-color: #D4AF37 !important;
+        color: #0F172A !important;
+        border-color: #0F172A !important;
+        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.6), 0 0 15px rgba(212, 175, 55, 0.5) !important;
     }
 
-    div.stButton > button:focus *, 
     div.stButton > button:active *, 
-    div.stDownloadButton > button:focus *, 
+    div.stButton > button:focus *, 
     div.stDownloadButton > button:active *, 
-    div.stFormSubmitButton > button:focus *, 
-    div.stFormSubmitButton > button:active *,
-    a[data-testid="stLinkButton"]:focus *,
+    div.stDownloadButton > button:focus *, 
+    div.stFormSubmitButton > button:active *, 
+    div.stFormSubmitButton > button:focus *,
     a[data-testid="stLinkButton"]:active *,
-    button[kind="primary"]:focus *,
-    button[kind="primary"]:active * {
-        color: #FFFFFF !important;
+    a[data-testid="stLinkButton"]:focus * {
+        color: #0F172A !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
@@ -246,6 +235,12 @@ st.sidebar.markdown(
 )
 
 
+def limpiar_texto_detalles(texto):
+    if not texto or str(texto).strip().lower() in ["nan", "none", "", "null"]:
+        return "Sin observaciones adicionales registradas."
+    return str(texto).strip()
+
+
 def mostrar_evidencia(link_archivo):
     if link_archivo and str(link_archivo).strip() not in [
         "Sin archivo",
@@ -275,18 +270,19 @@ if rol == "Padre de Familia / Acudiente":
     if doc_hijo:
         resultado = df[
             df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
-            | df["nombre"].str.contains(doc_hijo, case=False, na=False)
+            | df["nombre"].astype(str).str.contains(doc_hijo, case=False, na=False)
         ]
 
         if not resultado.empty:
             st.success("Registros del estudiante:")
             for index, row in resultado.iterrows():
+                detalles_limpios = limpiar_texto_detalles(row.get("detalles", ""))
                 st.info(
-                    f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
-                    f" **Fecha:** {row['fecha']} |  **Tipo:**"
-                    f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
+                    f" **Estudiante:** {row.get('nombre', 'Estudiante')} ({row.get('grado', 'N/A')})\n"
+                    f" **Fecha:** {row.get('fecha', 'N/A')} | **Tipo:**"
+                    f" {row.get('tipo_registro', 'Registro')}\n**Detalles:** {detalles_limpios}"
                 )
-                mostrar_evidencia(row["archivo"])
+                mostrar_evidencia(row.get("archivo", ""))
         else:
             st.warning("No se hallaron registros para el estudiante indicado.")
 
@@ -314,9 +310,10 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
+            # Soporte completo para .docx junto a PDF, PNG, JPG
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
-                type=["pdf", "png", "jpg", "jpeg"],
+                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
+                type=["pdf", "png", "jpg", "jpeg", "docx"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")
@@ -333,12 +330,14 @@ elif rol == "Docente / Directivo":
                         "utf-8"
                     )
 
+                detalles_enviar = limpiar_texto_detalles(detalles_reg)
+
                 datos_a_enviar = {
                     "documento": str(nuevo_doc),
                     "nombre": nuevo_nombre,
                     "grado": nuevo_grado,
                     "tipo_registro": tipo_reg,
-                    "detalles": detalles_reg,
+                    "detalles": detalles_enviar,
                     "fecha": str(fecha_reg),
                     "fileName": file_name,
                     "mimeType": mime_type,
@@ -357,7 +356,7 @@ elif rol == "Docente / Directivo":
                             "nombre": nuevo_nombre,
                             "grado": nuevo_grado,
                             "tipo_registro": tipo_reg,
-                            "detalles": detalles_reg,
+                            "detalles": detalles_enviar,
                             "fecha": str(fecha_reg),
                             "archivo": url_generada,
                         }
@@ -398,7 +397,7 @@ elif rol == "Docente / Directivo":
             fecha_reg = row.get("fecha", "")
             grado_reg = row.get("grado", "")
             doc_reg = row.get("documento", "")
-            detalles_reg = row.get("detalles", "")
+            detalles_reg = limpiar_texto_detalles(row.get("detalles", ""))
             archivo_reg = row.get("archivo", "Sin archivo")
 
             with st.expander(f" {nombre_est} - {tipo_reg} ({fecha_reg})"):

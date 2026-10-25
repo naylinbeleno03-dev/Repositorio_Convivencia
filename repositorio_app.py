@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS corregidos con los selectores internos de Streamlit para modo oscuro
+# Estilos CSS con los botones corregidos (Letras negras al presionar o pasar el cursor)
 st.markdown(
     """
     <style>
@@ -95,7 +95,7 @@ st.markdown(
     }
 
     /* =========================================================================
-       SOLUCIÓN DEFINITIVA PARA BOTONES (Incluyendo formularios y modo oscuro)
+       ESTILOS DE BOTONES: FONDO AZUL Y LETRAS BLANCAS POR DEFECTO
        ========================================================================= */
     div.stButton > button, 
     div.stFormSubmitButton > button, 
@@ -123,28 +123,42 @@ st.markdown(
         -webkit-text-fill-color: #FFFFFF !important;
     }
 
-    /* Estado Hover (al pasar el cursor) */
+    /* =========================================================================
+       ESTADOS HOVER, FOCUS Y ACTIVE: FONDO DORADO Y LETRAS NEGRAS AL PRESIONAR
+       ========================================================================= */
     div.stButton > button:hover, 
     div.stFormSubmitButton > button:hover, 
     div[data-testid="stDownloadButton"] > button:hover, 
     a[data-testid="stLinkButton"]:hover,
     button[data-testid="baseButton-secondary"]:hover,
-    button[data-testid="baseButton-primary"]:hover {
+    button[data-testid="baseButton-primary"]:hover,
+    div.stButton > button:focus, 
+    div.stFormSubmitButton > button:focus,
+    div.stButton > button:active, 
+    div.stFormSubmitButton > button:active,
+    button[data-testid="baseButton-secondary"]:focus,
+    button[data-testid="baseButton-secondary"]:active {
         background-color: #D4AF37 !important;
         border-color: #D4AF37 !important;
-        color: #0F172A !important;
+        color: #000000 !important;
     }
 
-    /* Forzar texto oscuro al hacer hover para contraste perfecto */
+    /* Forzar texto NEGRO al pasar el mouse o presionar */
     div.stButton > button:hover *, 
     div.stFormSubmitButton > button:hover *, 
     div[data-testid="stDownloadButton"] > button:hover *, 
     a[data-testid="stLinkButton"]:hover *,
     button[data-testid="baseButton-secondary"]:hover *,
-    button[data-testid="baseButton-primary"]:hover * {
-        color: #0F172A !important;
-        fill: #0F172A !important;
-        -webkit-text-fill-color: #0F172A !important;
+    button[data-testid="baseButton-primary"]:hover *,
+    div.stButton > button:focus *, 
+    div.stFormSubmitButton > button:focus *,
+    div.stButton > button:active *, 
+    div.stFormSubmitButton > button:active *,
+    button[data-testid="baseButton-secondary"]:focus *,
+    button[data-testid="baseButton-secondary"]:active * {
+        color: #000000 !important;
+        fill: #000000 !important;
+        -webkit-text-fill-color: #000000 !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {

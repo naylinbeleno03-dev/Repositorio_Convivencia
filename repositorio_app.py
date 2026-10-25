@@ -11,57 +11,58 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS definitivos para modo oscuro, expanders, iconos y botones
+# Estilos CSS limpios, con fondo claro original, tamaño de letra estándar y botones blindados
 st.markdown(
     """
     <style>
-    /* Fondo general oscuro y color de texto claro base */
     .stApp {
-        background-color: #0F172A !important;
-        color: #F1F5F9 !important;
+        background-color: #F3F4F6 !important;
+        color: #1F2937 !important;
     }
     
-    /* Forzar legibilidad en textos generales, etiquetas y markdown */
-    p, span, label, h1, h2, h3, h4, h5, h6, .stMarkdown, div[data-testid="stMarkdownContainer"] {
-        color: #F1F5F9 !important;
-    }
-
-    /* Barra lateral */
+    /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
     }
 
-    section[data-testid="stSidebar"] * {
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] li,
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
         color: #FFFFFF !important;
     }
 
-    /* Estilo robusto para el expander en la barra lateral y en el panel de archivos */
-    div[data-testid="stExpander"] {
-        background-color: #1E293B !important;
+    /* Estilo robusto para el expander en la barra lateral */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] {
+        background-color: #334155 !important;
         border: 1px solid #475569 !important;
         border-radius: 8px !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
     }
 
-    div[data-testid="stExpander"] details {
-        background-color: #1E293B !important;
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] details {
+        background-color: #334155 !important;
     }
 
-    div[data-testid="stExpander"] summary, 
-    div[data-testid="stExpander"] summary p, 
-    div[data-testid="stExpander"] summary span {
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {
         color: #FFFFFF !important;
         font-weight: 600 !important;
     }
 
-    div[data-testid="stExpander"] summary:hover {
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {
         color: #FDE047 !important;
     }
 
-    /* Textos dentro de los expanders (Panel de archivos) */
-    div[data-testid="stExpander"] div[data-testid="stMarkdownContainer"] p,
-    div[data-testid="stExpander"] div {
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] p,
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] li {
         color: #F1F5F9 !important;
+        font-size: 0.9rem !important;
     }
 
     section[data-testid="stSidebar"] div[data-testid="stExpander"] a {
@@ -70,40 +71,48 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-    /* Encabezado superior con título en blanco */
     .header-box {
-        background-color: #1E293B !important;
+        background-color: #0F172A !important;
         padding: 22px;
         border-radius: 12px;
         border-left: 6px solid #D4AF37;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
     
-    .header-box h1, 
-    .header-box p {
+    .header-box h1 {
         color: #FFFFFF !important;
+        margin: 0 !important;
+        font-size: 1.65rem !important;
+        font-weight: 600 !important;
     }
 
-    /* BOTONES, DESCARGAS Y LINKS (Texto e iconos blancos en modo oscuro, sin tintes azules) */
-    .stButton > button, 
-    div[data-testid="stDownloadButton"] > button, 
-    .stFormSubmitButton > button, 
+    .header-box p {
+        color: #FFFFFF !important;
+        margin-top: 6px !important;
+        margin-bottom: 0 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* BOTONES BLINDADOS (Funcionan perfecto sin importar el modo claro u oscuro del navegador) */
+    .stButton>button, 
+    div[data-testid="stDownloadButton"]>button, 
+    .stFormSubmitButton>button, 
     a[data-testid="stLinkButton"],
     button[data-testid="baseButton-secondary"],
     button[data-testid="baseButton-primary"] {
-        background-color: #1E293B !important;
+        background-color: #0F172A !important;
         color: #FFFFFF !important;
-        border: 1px solid #475569 !important;
+        border: 1px solid #0F172A !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
         padding: 8px 16px !important;
     }
 
-    /* Forzar texto, spans y símbolos SVG a blanco */
-    .stButton > button *, 
-    div[data-testid="stDownloadButton"] > button *, 
-    .stFormSubmitButton > button *, 
+    /* Forzar texto e iconos internos a blanco por defecto */
+    .stButton>button *, 
+    div[data-testid="stDownloadButton"]>button *, 
+    .stFormSubmitButton>button *, 
     a[data-testid="stLinkButton"] *,
     button[data-testid="baseButton-secondary"] *,
     button[data-testid="baseButton-primary"] * {
@@ -112,10 +121,10 @@ st.markdown(
         -webkit-text-fill-color: #FFFFFF !important;
     }
 
-    /* Efecto Hover (Dorado institucional con texto oscuro) */
-    .stButton > button:hover, 
-    div[data-testid="stDownloadButton"] > button:hover, 
-    .stFormSubmitButton > button:hover, 
+    /* Estado Hover (Al pasar el mouse o presionar: Dorado con letras oscuras) */
+    .stButton>button:hover, 
+    div[data-testid="stDownloadButton"]>button:hover, 
+    .stFormSubmitButton>button:hover, 
     a[data-testid="stLinkButton"]:hover,
     button[data-testid="baseButton-secondary"]:hover,
     button[data-testid="baseButton-primary"]:hover {
@@ -124,39 +133,31 @@ st.markdown(
         color: #0F172A !important;
     }
 
-    .stButton > button:hover *, 
-    div[data-testid="stDownloadButton"] > button:hover *, 
-    .stFormSubmitButton > button:hover *, 
+    .stButton>button:hover *, 
+    div[data-testid="stDownloadButton"]>button:hover *, 
+    .stFormSubmitButton>button:hover *, 
     a[data-testid="stLinkButton"]:hover *,
     button[data-testid="baseButton-secondary"]:hover *,
-    button[data-testid="baseButton-primary"]:hover * {
+    button[data-testid="baseButton-primary"] * {
         color: #0F172A !important;
         fill: #0F172A !important;
         -webkit-text-fill-color: #0F172A !important;
     }
 
-    /* Campos de entrada con fondo oscuro suave y texto blanco */
-    .stTextInput > div > div > input, 
-    .stSelectbox > div > div > div, 
-    .stTextArea textarea {
-        background-color: #1E293B !important;
-        color: #FFFFFF !important;
-        border: 1px solid #475569 !important;
+    /* Textos estándar normales */
+    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
+        color: #1F2937 !important;
+    }
+
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
+        background-color: #FFFFFF !important;
+        color: #000000 !important;
+        border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
     }
 
-    /* Cajas de alerta info/success */
-    div[data-testid="stInfo"], div[data-testid="stSuccess"], div[data-testid="stWarning"] {
-        background-color: #1E293B !important;
-        color: #F1F5F9 !important;
-        border: 1px solid #475569 !important;
-    }
-    div[data-testid="stInfo"] *, div[data-testid="stSuccess"] *, div[data-testid="stWarning"] * {
-        color: #F1F5F9 !important;
-    }
-
     hr {
-        border-color: #475569 !important;
+        border-color: #64748B !important;
     }
     </style>
 """,
@@ -289,7 +290,7 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
-            # Soporte estricto para PDF, imágenes y documentos Word .docx (sin .doc)
+            # Soporte solo para PDF, imágenes y documentos Word .docx (sin .doc)
             archivo_subido = st.file_uploader(
                 "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
                 type=["pdf", "png", "jpg", "jpeg", "docx"],

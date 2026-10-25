@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS optimizados con selectores directos a etiquetas internas para garantizar legibilidad
+# Estilos CSS simplificados (Opción 2)
 st.markdown(
     """
     <style>
@@ -20,55 +20,14 @@ st.markdown(
         color: #1F2937 !important;
     }
     
-    /* Barra lateral en azul oscuro elegante */
+    /* Barra lateral */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
     }
 
-    section[data-testid="stSidebar"] h1, 
-    section[data-testid="stSidebar"] h2, 
-    section[data-testid="stSidebar"] h3,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] li,
-    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
+    section[data-testid="stSidebar"] * {
         color: #FFFFFF !important;
-    }
-
-    /* Estilo robusto para el expander en la barra lateral */
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] {
-        background-color: #334155 !important;
-        border: 1px solid #475569 !important;
-        border-radius: 8px !important;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] details {
-        background-color: #334155 !important;
-    }
-
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {
-        color: #FFFFFF !important;
-        font-weight: 600 !important;
-    }
-
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {
-        color: #FDE047 !important;
-    }
-
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] p,
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] li {
-        color: #F1F5F9 !important;
-        font-size: 0.9rem !important;
-    }
-
-    section[data-testid="stSidebar"] div[data-testid="stExpander"] a {
-        color: #FDE047 !important;
-        text-decoration: underline !important;
-        font-weight: 600 !important;
     }
 
     .header-box {
@@ -76,98 +35,28 @@ st.markdown(
         padding: 22px;
         border-radius: 12px;
         border-left: 6px solid #D4AF37;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
     
-    .header-box h1 {
+    .header-box h1, .header-box p {
         color: #FFFFFF !important;
-        margin: 0 !important;
-        font-size: 1.65rem !important;
-        font-weight: 600 !important;
     }
 
-    .header-box p {
-        color: #FFFFFF !important;
-        margin-top: 6px !important;
-        margin-bottom: 0 !important;
-        font-size: 0.95rem !important;
-    }
-
-    /* =========================================================================
-       ESTILOS DEFINITIVOS PARA BOTONES (Fondo azul, texto blanco por defecto)
-       ========================================================================= */
+    /* ESTILO FIJO Y SENCILLO PARA TODOS LOS BOTONES */
     .stButton > button, 
     .stFormSubmitButton > button, 
     div[data-testid="stDownloadButton"] > button, 
     a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
-        border: 1px solid #0F172A !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
-        padding: 8px 16px !important;
     }
 
-    /* Forzar texto interno (p y span) a blanco en estado normal */
-    .stButton > button p, 
-    .stButton > button span,
-    .stFormSubmitButton > button p, 
-    .stFormSubmitButton > button span,
-    div[data-testid="stDownloadButton"] > button p, 
-    div[data-testid="stDownloadButton"] > button span,
-    a[data-testid="stLinkButton"] p,
-    a[data-testid="stLinkButton"] span {
-        color: #FFFFFF !important;
-        -webkit-text-fill-color: #FFFFFF !important;
-    }
-
-    /* =========================================================================
-       ESTADOS HOVER, FOCUS Y ACTIVE (Fondo dorado, texto NEGRO)
-       ========================================================================= */
     .stButton > button:hover, 
-    .stButton > button:focus, 
-    .stButton > button:active,
-    .stFormSubmitButton > button:hover, 
-    .stFormSubmitButton > button:focus, 
-    .stFormSubmitButton > button:active,
-    div[data-testid="stDownloadButton"] > button:hover, 
-    div[data-testid="stDownloadButton"] > button:focus, 
-    div[data-testid="stDownloadButton"] > button:active,
-    a[data-testid="stLinkButton"]:hover,
-    a[data-testid="stLinkButton"]:focus,
-    a[data-testid="stLinkButton"]:active {
+    .stFormSubmitButton > button:hover {
         background-color: #D4AF37 !important;
-        border-color: #D4AF37 !important;
         color: #000000 !important;
-    }
-
-    /* Forzar texto interno a NEGRO al pasar el mouse o hacer clic */
-    .stButton > button:hover p, .stButton > button:hover span,
-    .stButton > button:focus p, .stButton > button:focus span,
-    .stButton > button:active p, .stButton > button:active span,
-    .stFormSubmitButton > button:hover p, .stFormSubmitButton > button:hover span,
-    .stFormSubmitButton > button:focus p, .stFormSubmitButton > button:focus span,
-    .stFormSubmitButton > button:active p, .stFormSubmitButton > button:active span,
-    div[data-testid="stDownloadButton"] > button:hover p, div[data-testid="stDownloadButton"] > button:hover span,
-    a[data-testid="stLinkButton"]:hover p, a[data-testid="stLinkButton"]:hover span {
-        color: #000000 !important;
-        -webkit-text-fill-color: #000000 !important;
-    }
-
-    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
-        color: #1F2937 !important;
-    }
-
-    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
-        background-color: #FFFFFF !important;
-        color: #000000 !important;
-        border: 1px solid #CBD5E1 !important;
-        border-radius: 6px !important;
-    }
-
-    hr {
-        border-color: #64748B !important;
     }
     </style>
 """,

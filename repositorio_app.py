@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS optimizados para solucionar el problema de los botones en modo oscuro y al hacer clic
+# Estilos CSS corregidos con los selectores internos de Streamlit para modo oscuro
 st.markdown(
     """
     <style>
@@ -94,11 +94,15 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* ESTILO UNIFICADO Y BLINDADO PARA TODOS LOS BOTONES (Normales, Formularios, Descargas, Links) */
-    .stButton>button, 
-    div[data-testid="stDownloadButton"]>button, 
-    .stFormSubmitButton>button, 
-    a[data-testid="stLinkButton"] {
+    /* =========================================================================
+       SOLUCIÓN DEFINITIVA PARA BOTONES (Incluyendo formularios y modo oscuro)
+       ========================================================================= */
+    div.stButton > button, 
+    div.stFormSubmitButton > button, 
+    div[data-testid="stDownloadButton"] > button, 
+    a[data-testid="stLinkButton"],
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="baseButton-primary"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -107,40 +111,40 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    /* Forzar texto e íconos internos en blanco en estado normal */
-    .stButton>button *, 
-    div[data-testid="stDownloadButton"]>button *, 
-    .stFormSubmitButton>button *, 
-    a[data-testid="stLinkButton"] * {
+    /* Forzar texto e íconos internos a blanco en estado normal */
+    div.stButton > button *, 
+    div.stFormSubmitButton > button *, 
+    div[data-testid="stDownloadButton"] > button *, 
+    a[data-testid="stLinkButton"] *,
+    button[data-testid="baseButton-secondary"] *,
+    button[data-testid="baseButton-primary"] * {
         color: #FFFFFF !important;
         fill: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
     }
 
-    /* Estado Hover, Focus y Active (al pasar el mouse, hacer clic o presionar) */
-    .stButton>button:hover, 
-    div[data-testid="stDownloadButton"]>button:hover, 
-    .stFormSubmitButton>button:hover, 
+    /* Estado Hover (al pasar el cursor) */
+    div.stButton > button:hover, 
+    div.stFormSubmitButton > button:hover, 
+    div[data-testid="stDownloadButton"] > button:hover, 
     a[data-testid="stLinkButton"]:hover,
-    .stButton>button:focus, 
-    .stButton>button:active,
-    .stFormSubmitButton>button:focus,
-    .stFormSubmitButton>button:active {
+    button[data-testid="baseButton-secondary"]:hover,
+    button[data-testid="baseButton-primary"]:hover {
         background-color: #D4AF37 !important;
-        color: #0F172A !important;
         border-color: #D4AF37 !important;
+        color: #0F172A !important;
     }
 
-    /* Forzar texto oscuro al hacer hover, focus o active para contraste perfecto */
-    .stButton>button:hover *, 
-    div[data-testid="stDownloadButton"]>button:hover *, 
-    .stFormSubmitButton>button:hover *, 
+    /* Forzar texto oscuro al hacer hover para contraste perfecto */
+    div.stButton > button:hover *, 
+    div.stFormSubmitButton > button:hover *, 
+    div[data-testid="stDownloadButton"] > button:hover *, 
     a[data-testid="stLinkButton"]:hover *,
-    .stButton>button:focus *, 
-    .stButton>button:active *,
-    .stFormSubmitButton>button:focus *,
-    .stFormSubmitButton>button:active * {
+    button[data-testid="baseButton-secondary"]:hover *,
+    button[data-testid="baseButton-primary"]:hover * {
         color: #0F172A !important;
         fill: #0F172A !important;
+        -webkit-text-fill-color: #0F172A !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {

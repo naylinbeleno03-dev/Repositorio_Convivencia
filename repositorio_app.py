@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS personalizados para legibilidad perfecta en modo claro y oscuro
+# Estilos CSS con textos oscuros, sólidos y de alta visibilidad
 st.markdown(
     """
     <style>
@@ -20,7 +20,12 @@ st.markdown(
         color: #1F2937 !important;
     }
     
-    /* Barra lateral en azul oscuro elegante */
+    /* Forzar textos generales oscuros y legibles (evitando tonos claros o fosforescentes) */
+    p, span, label, div, .stMarkdown, .stText, [data-testid="stWidgetLabel"] p {
+        color: #1F2937 !important;
+    }
+
+    /* Barra lateral en azul oscuro elegante con texto blanco */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
@@ -87,14 +92,14 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-    .stMarkdown .header-box p, .header-box p {
+    .header-box p {
         color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
 
-    /* Estilos globales para botones y enlaces de acción */
+    /* Estilos para botones y enlaces de acción */
     .stButton>button, div[data-testid="stDownloadButton"]>button, a[kind="primary"], .stFormSubmitButton>button {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
@@ -110,7 +115,6 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
-    /* Hover con contraste claro para evitar que las letras se vuelvan invisibles */
     .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, a[kind="primary"]:hover, .stFormSubmitButton>button:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
@@ -123,24 +127,17 @@ st.markdown(
         color: #0F172A !important;
     }
 
-    /* Cajas de mensaje st.info, st.success, st.warning con colores oscuros sobrios */
+    /* Contenedores de notificación (st.info, st.success, etc.) con texto oscuro legible */
     div[data-testid="stNotification"] {
-        background-color: #1E293B !important;
-        color: #F8FAFC !important;
-        border-left: 5px solid #D4AF37 !important;
+        background-color: #FFFFFF !important;
+        color: #1F2937 !important;
+        border-left: 5px solid #0F172A !important;
         border-radius: 8px !important;
+        border: 1px solid #CBD5E1 !important;
     }
 
     div[data-testid="stNotification"] p, div[data-testid="stNotification"] span, div[data-testid="stNotification"] div {
-        color: #F8FAFC !important;
-    }
-
-    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
-    }
-
-    .stMarkdown .header-box p {
-        color: #FFFFFF !important;
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
@@ -150,12 +147,12 @@ st.markdown(
         border-radius: 6px !important;
     }
 
-    /* Estilo legible para el área de carga de archivos (st.file_uploader) */
+    /* Estilo visible para el área de carga de archivos (st.file_uploader) */
     [data-testid="stFileUploader"] {
         background-color: #FFFFFF !important;
-        border: 2px dashed #CBD5E1 !important;
+        border: 2px dashed #0F172A !important;
         border-radius: 10px;
-        padding: 10px;
+        padding: 12px;
     }
 
     [data-testid="stFileUploader"] section {
@@ -169,6 +166,7 @@ st.markdown(
     [data-testid="stFileUploader"] button {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
+        border-radius: 6px;
     }
 
     [data-testid="stFileUploader"] button span {
@@ -309,9 +307,9 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
-            # Habilitar soporte para archivos .docx junto a PDF, PNG, JPG
+            # Cargador actualizado con etiqueta clara y visible (Incluye PDF, PNG, JPG, DOCX)
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
+                "Descargar / Cargar Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
                 type=["pdf", "png", "jpg", "jpeg", "docx"],
             )
 

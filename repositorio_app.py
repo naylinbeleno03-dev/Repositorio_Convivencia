@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS personalizados
+# Estilos CSS optimizados para visibilidad perfecta en modo claro y oscuro
 st.markdown(
     """
     <style>
@@ -94,7 +94,7 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* Botones y enlaces corregidos para asegurar visibilidad */
+    /* Botones y enlaces con visibilidad garantizada en modo claro y oscuro */
     .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
@@ -131,6 +131,32 @@ st.markdown(
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
+    }
+
+    /* Estilo visible y limpio para el área de carga de archivos (Upload) en ambos modos */
+    [data-testid="stFileUploader"] {
+        background-color: #FFFFFF !important;
+        border: 2px dashed #0F172A !important;
+        border-radius: 10px;
+        padding: 12px;
+    }
+
+    [data-testid="stFileUploader"] section {
+        background-color: #FFFFFF !important;
+    }
+
+    [data-testid="stFileUploader"] span, [data-testid="stFileUploader"] p, [data-testid="stFileUploader"] small, [data-testid="stFileUploader"] div {
+        color: #1F2937 !important;
+    }
+
+    [data-testid="stFileUploader"] button {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        border-radius: 6px;
+    }
+
+    [data-testid="stFileUploader"] button * {
+        color: #FFFFFF !important;
     }
 
     hr {
@@ -260,9 +286,10 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
+            # Soporte agregado para .docx junto a PDF, PNG, JPG
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
-                type=["pdf", "png", "jpg", "jpeg"],
+                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
+                type=["pdf", "png", "jpg", "jpeg", "docx"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")

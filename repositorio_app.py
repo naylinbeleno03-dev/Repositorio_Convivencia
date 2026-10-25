@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con anulación profunda para BaseWeb y estados de clic
+# Estilos CSS optimizados con la misma base limpia del Chatbot
 st.markdown(
     """
     <style>
@@ -94,14 +94,8 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* ==========================================================================
-       CORRECCIÓN RADICAL DE BOTONES (Basada en BaseWeb para evitar fondos blancos)
-       ========================================================================== */
-    div.stButton > button, 
-    div[data-testid="stDownloadButton"] > button, 
-    .stFormSubmitButton > button, 
-    a[data-testid="stLinkButton"],
-    button[data-baseweb="button"] {
+    /* Estructura limpia de botones idéntica a la del Chatbot */
+    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -110,73 +104,22 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    div.stButton > button *, 
-    div[data-testid="stDownloadButton"] > button *, 
-    .stFormSubmitButton > button *, 
-    a[data-testid="stLinkButton"] *,
-    button[data-baseweb="button"] * {
+    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
+    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
+    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
         color: #FFFFFF !important;
-        fill: #FFFFFF !important;
     }
 
-    /* Estado Hover (Al pasar el cursor) */
-    div.stButton > button:hover, 
-    div[data-testid="stDownloadButton"] > button:hover, 
-    .stFormSubmitButton > button:hover, 
-    a[data-testid="stLinkButton"]:hover,
-    button[data-baseweb="button"]:hover {
+    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
-    div.stButton > button:hover *, 
-    div[data-testid="stDownloadButton"] > button:hover *, 
-    .stFormSubmitButton > button:hover *, 
-    a[data-testid="stLinkButton"]:hover *,
-    button[data-baseweb="button"]:hover * {
+    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
+    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
+    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
         color: #0F172A !important;
-        fill: #0F172A !important;
-    }
-
-    /* Estado Focus, Active y Focus-Visible (Evita el fondo blanco/transparente al presionar) */
-    div.stButton > button:focus, 
-    div.stButton > button:active, 
-    div.stButton > button:focus-visible,
-    div[data-testid="stDownloadButton"] > button:focus, 
-    div[data-testid="stDownloadButton"] > button:active, 
-    div[data-testid="stDownloadButton"] > button:focus-visible,
-    .stFormSubmitButton > button:focus, 
-    .stFormSubmitButton > button:active, 
-    .stFormSubmitButton > button:focus-visible,
-    a[data-testid="stLinkButton"]:focus, 
-    a[data-testid="stLinkButton"]:active,
-    button[data-baseweb="button"]:focus,
-    button[data-baseweb="button"]:active,
-    button[data-baseweb="button"]:focus-visible {
-        background-color: #0F172A !important;
-        color: #FFFFFF !important;
-        border-color: #D4AF37 !important;
-        box-shadow: 0 0 0 2px #D4AF37 !important;
-        outline: none !important;
-    }
-
-    div.stButton > button:focus *, 
-    div.stButton > button:active *, 
-    div.stButton > button:focus-visible *,
-    div[data-testid="stDownloadButton"] > button:focus *, 
-    div[data-testid="stDownloadButton"] > button:active *, 
-    div[data-testid="stDownloadButton"] > button:focus-visible *,
-    .stFormSubmitButton > button:focus *, 
-    .stFormSubmitButton > button:active *, 
-    .stFormSubmitButton > button:focus-visible *,
-    a[data-testid="stLinkButton"]:focus *, 
-    a[data-testid="stLinkButton"]:active *,
-    button[data-baseweb="button"]:focus *,
-    button[data-baseweb="button"]:active *,
-    button[data-baseweb="button"]:focus-visible * {
-        color: #FFFFFF !important;
-        fill: #FFFFFF !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {

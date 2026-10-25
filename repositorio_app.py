@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS idénticos a los del Chatbot (botones estables y legibles en ambos modos)
+# Estilos CSS con corrección absoluta para los estados de enfoque y clic en modo oscuro
 st.markdown(
     """
     <style>
@@ -87,15 +87,20 @@ st.markdown(
         font-weight: 600 !important;
     }
 
-    .stMarkdown .header-box p, .header-box p {
+    .header-box p {
         color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
 
-    /* Estilos de botones exactamente iguales a los del Chatbot (Sin fallos al presionar) */
-    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
+    /* ==========================================================================
+       CORRECCIÓN ABSOLUTA DE BOTONES (NORMAL, HOVER, FOCUS Y ACTIVE)
+       ========================================================================== */
+    .stButton > button, 
+    div[data-testid="stDownloadButton"] > button, 
+    .stFormSubmitButton > button, 
+    a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -104,30 +109,61 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
-    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
-    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
+    .stButton > button *, 
+    div[data-testid="stDownloadButton"] > button *, 
+    .stFormSubmitButton > button *, 
+    a[data-testid="stLinkButton"] * {
         color: #FFFFFF !important;
+        fill: #FFFFFF !important;
     }
 
-    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
+    /* Estado Hover (Al pasar el cursor) */
+    .stButton > button:hover, 
+    div[data-testid="stDownloadButton"] > button:hover, 
+    .stFormSubmitButton > button:hover, 
+    a[data-testid="stLinkButton"]:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
-    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
-    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
-    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
+    .stButton > button:hover *, 
+    div[data-testid="stDownloadButton"] > button:hover *, 
+    .stFormSubmitButton > button:hover *, 
+    a[data-testid="stLinkButton"]:hover * {
         color: #0F172A !important;
+        fill: #0F172A !important;
+    }
+
+    /* Estado Focus y Active (Al hacer clic o presionar - Evita que se ponga blanco/transparente) */
+    .stButton > button:focus, 
+    .stButton > button:active, 
+    div[data-testid="stDownloadButton"] > button:focus, 
+    div[data-testid="stDownloadButton"] > button:active, 
+    .stFormSubmitButton > button:focus, 
+    .stFormSubmitButton > button:active, 
+    a[data-testid="stLinkButton"]:focus, 
+    a[data-testid="stLinkButton"]:active {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        border-color: #D4AF37 !important;
+        box-shadow: 0 0 0 2px #D4AF37 !important;
+    }
+
+    .stButton > button:focus *, 
+    .stButton > button:active *, 
+    div[data-testid="stDownloadButton"] > button:focus *, 
+    div[data-testid="stDownloadButton"] > button:active *, 
+    .stFormSubmitButton > button:focus *, 
+    .stFormSubmitButton > button:active *, 
+    a[data-testid="stLinkButton"]:focus *, 
+    a[data-testid="stLinkButton"]:active * {
+        color: #FFFFFF !important;
+        fill: #FFFFFF !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
         color: #1F2937 !important;
-    }
-
-    .stMarkdown .header-box p {
-        color: #FFFFFF !important;
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
@@ -231,7 +267,7 @@ if rol == "Padre de Familia / Acudiente":
     if doc_hijo:
         resultado = df[
             df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
-            | df["nombre"].astype(str).str.contains(doc_hijo, case=False, na=False)
+            | df["nombre"].str.contains(doc_hijo, case=False, na=False)
         ]
 
         if not resultado.empty:
@@ -271,7 +307,6 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
-            # Soporte completo para .docx junto a PDF, PNG, JPG
             archivo_subido = st.file_uploader(
                 "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
                 type=["pdf", "png", "jpg", "jpeg", "docx"],

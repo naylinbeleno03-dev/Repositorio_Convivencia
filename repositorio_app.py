@@ -6,12 +6,12 @@ import requests
 import streamlit as st
 from zoneinfo import ZoneInfo
 
-# Configuración de la página
+# Configuración de la página forzando base clara para evitar problemas de visualización
 st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS simplificados (Opción 2)
+# Estilos CSS limpios y estables basados en tu versión original
 st.markdown(
     """
     <style>
@@ -20,14 +20,55 @@ st.markdown(
         color: #1F2937 !important;
     }
     
-    /* Barra lateral */
+    /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
         border-right: 1px solid #334155 !important;
     }
 
-    section[data-testid="stSidebar"] * {
+    section[data-testid="stSidebar"] h1, 
+    section[data-testid="stSidebar"] h2, 
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] li,
+    section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {
         color: #FFFFFF !important;
+    }
+
+    /* Estilo robusto para el expander en la barra lateral */
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] {
+        background-color: #334155 !important;
+        border: 1px solid #475569 !important;
+        border-radius: 8px !important;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] details {
+        background-color: #334155 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary {
+        color: #FFFFFF !important;
+        font-weight: 600 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] summary:hover {
+        color: #FDE047 !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] p,
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] li {
+        color: #F1F5F9 !important;
+        font-size: 0.9rem !important;
+    }
+
+    section[data-testid="stSidebar"] div[data-testid="stExpander"] a {
+        color: #FDE047 !important;
+        text-decoration: underline !important;
+        font-weight: 600 !important;
     }
 
     .header-box {
@@ -35,28 +76,65 @@ st.markdown(
         padding: 22px;
         border-radius: 12px;
         border-left: 6px solid #D4AF37;
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         margin-bottom: 24px;
     }
     
-    .header-box h1, .header-box p {
+    .header-box h1 {
         color: #FFFFFF !important;
-    }
-
-    /* ESTILO FIJO Y SENCILLO PARA TODOS LOS BOTONES */
-    .stButton > button, 
-    .stFormSubmitButton > button, 
-    div[data-testid="stDownloadButton"] > button, 
-    a[data-testid="stLinkButton"] {
-        background-color: #0F172A !important;
-        color: #FFFFFF !important;
-        border-radius: 8px !important;
+        margin: 0 !important;
+        font-size: 1.65rem !important;
         font-weight: 600 !important;
     }
 
-    .stButton > button:hover, 
-    .stFormSubmitButton > button:hover {
+    .header-box p {
+        color: #FFFFFF !important;
+        margin-top: 6px !important;
+        margin-bottom: 0 !important;
+        font-size: 0.95rem !important;
+    }
+
+    /* Estructura limpia de botones */
+    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
+        background-color: #0F172A !important;
+        color: #FFFFFF !important;
+        border: 1px solid #0F172A !important;
+        border-radius: 8px !important;
+        font-weight: 600 !important;
+        padding: 8px 16px !important;
+    }
+
+    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
+    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
+    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
+        color: #FFFFFF !important;
+    }
+
+    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
         background-color: #D4AF37 !important;
+        color: #0F172A !important;
+        border-color: #D4AF37 !important;
+    }
+
+    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
+    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
+    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
+        color: #0F172A !important;
+    }
+
+    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
+        color: #1F2937 !important;
+    }
+
+    .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
+        background-color: #FFFFFF !important;
         color: #000000 !important;
+        border: 1px solid #CBD5E1 !important;
+        border-radius: 6px !important;
+    }
+
+    hr {
+        border-color: #64748B !important;
     }
     </style>
 """,
@@ -189,9 +267,10 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
+            # Se incluye soporte para archivos .docx y .doc
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
-                type=["pdf", "png", "jpg", "jpeg", "docx"],
+                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX, DOC)",
+                type=["pdf", "png", "jpg", "jpeg", "docx", "doc"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")
@@ -203,7 +282,7 @@ elif rol == "Docente / Directivo":
 
                 if archivo_subido is not None:
                     file_name = archivo_subido.name
-                    mime_type = archivo_subido.type
+                    mime_type = archivo_subido.type or "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     file_data_b64 = base64.b64encode(archivo_subido.getvalue()).decode(
                         "utf-8"
                     )

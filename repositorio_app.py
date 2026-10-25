@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con corrección definitiva para los estados de los botones (clic, focus, hover)
+# Estilos CSS con corrección radical para los botones en modo oscuro y claro
 st.markdown(
     """
     <style>
@@ -94,11 +94,15 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* CORRECCIÓN DEFINITIVA DE BOTONES: Normal, Focus, Active y Hover */
-    .stButton>button, 
-    div[data-testid="stDownloadButton"]>button, 
-    .stFormSubmitButton>button, 
-    a[data-testid="stLinkButton"] {
+    /* ==========================================================================
+       CORRECCIÓN TOTAL Y DEFINITIVA DE BOTONES (Normal, Hover, Focus, Active)
+       ========================================================================== */
+    div.stButton > button, 
+    div.stDownloadButton > button, 
+    div.stFormSubmitButton > button, 
+    a[data-testid="stLinkButton"],
+    button[kind="primary"],
+    button[kind="secondary"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -107,54 +111,65 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    .stButton>button *, 
-    div[data-testid="stDownloadButton"]>button *, 
-    .stFormSubmitButton>button *, 
-    a[data-testid="stLinkButton"] * {
+    /* Forzar texto blanco en cualquier elemento interno del botón */
+    div.stButton > button *, 
+    div.stDownloadButton > button *, 
+    div.stFormSubmitButton > button *, 
+    a[data-testid="stLinkButton"] *,
+    button[kind="primary"] *,
+    button[kind="secondary"] * {
         color: #FFFFFF !important;
     }
 
-    /* Estado al hacer clic o mantener presionado (Evita que se ponga blanco) */
-    .stButton>button:focus, 
-    .stButton>button:active,
-    div[data-testid="stDownloadButton"]>button:focus, 
-    div[data-testid="stDownloadButton"]>button:active,
-    .stFormSubmitButton>button:focus, 
-    .stFormSubmitButton>button:active,
+    /* Al pasar el cursor (Hover) */
+    div.stButton > button:hover, 
+    div.stDownloadButton > button:hover, 
+    div.stFormSubmitButton > button:hover, 
+    a[data-testid="stLinkButton"]:hover,
+    button[kind="primary"]:hover,
+    button[kind="secondary"]:hover {
+        background-color: #D4AF37 !important;
+        color: #0F172A !important;
+        border-color: #D4AF37 !important;
+    }
+
+    div.stButton > button:hover *, 
+    div.stDownloadButton > button:hover *, 
+    div.stFormSubmitButton > button:hover *, 
+    a[data-testid="stLinkButton"]:hover *,
+    button[kind="primary"]:hover *,
+    button[kind="secondary"]:hover * {
+        color: #0F172A !important;
+    }
+
+    /* Al hacer clic o mantener presionado (Focus y Active - Evita que se ponga blanco) */
+    div.stButton > button:focus, 
+    div.stButton > button:active, 
+    div.stDownloadButton > button:focus, 
+    div.stDownloadButton > button:active, 
+    div.stFormSubmitButton > button:focus, 
+    div.stFormSubmitButton > button:active,
     a[data-testid="stLinkButton"]:focus,
-    a[data-testid="stLinkButton"]:active {
+    a[data-testid="stLinkButton"]:active,
+    button[kind="primary"]:focus,
+    button[kind="primary"]:active {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border-color: #D4AF37 !important;
         box-shadow: 0 0 0 2px #D4AF37 !important;
     }
 
-    .stButton>button:focus *, 
-    .stButton>button:active *,
-    div[data-testid="stDownloadButton"]>button:focus *, 
-    div[data-testid="stDownloadButton"]>button:active *,
-    .stFormSubmitButton>button:focus *, 
-    .stFormSubmitButton>button:active *,
+    div.stButton > button:focus *, 
+    div.stButton > button:active *, 
+    div.stDownloadButton > button:focus *, 
+    div.stDownloadButton > button:active *, 
+    div.stFormSubmitButton > button:focus *, 
+    div.stFormSubmitButton > button:active *,
     a[data-testid="stLinkButton"]:focus *,
-    a[data-testid="stLinkButton"]:active * {
+    a[data-testid="stLinkButton"]:active *,
+    button[kind="primary"]:focus *,
+    button[kind="primary"]:active * {
         color: #FFFFFF !important;
-    }
-
-    /* Estado Hover (Al pasar el cursor) */
-    .stButton>button:hover, 
-    div[data-testid="stDownloadButton"]>button:hover, 
-    .stFormSubmitButton>button:hover, 
-    a[data-testid="stLinkButton"]:hover {
-        background-color: #D4AF37 !important;
-        color: #0F172A !important;
-        border-color: #D4AF37 !important;
-    }
-
-    .stButton>button:hover *, 
-    div[data-testid="stDownloadButton"]>button:hover *, 
-    .stFormSubmitButton>button:hover *, 
-    a[data-testid="stLinkButton"]:hover * {
-        color: #0F172A !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
@@ -170,32 +185,6 @@ st.markdown(
         color: #000000 !important;
         border: 1px solid #CBD5E1 !important;
         border-radius: 6px !important;
-    }
-
-    /* Estilo visible para el área de carga de archivos (Upload) */
-    [data-testid="stFileUploader"] {
-        background-color: #FFFFFF !important;
-        border: 2px dashed #0F172A !important;
-        border-radius: 10px;
-        padding: 12px;
-    }
-
-    [data-testid="stFileUploader"] section {
-        background-color: #FFFFFF !important;
-    }
-
-    [data-testid="stFileUploader"] span, [data-testid="stFileUploader"] p, [data-testid="stFileUploader"] small, [data-testid="stFileUploader"] div {
-        color: #1F2937 !important;
-    }
-
-    [data-testid="stFileUploader"] button {
-        background-color: #0F172A !important;
-        color: #FFFFFF !important;
-        border-radius: 6px;
-    }
-
-    [data-testid="stFileUploader"] button * {
-        color: #FFFFFF !important;
     }
 
     hr {
@@ -257,12 +246,6 @@ st.sidebar.markdown(
 )
 
 
-def limpiar_texto_detalles(texto):
-    if not texto or str(texto).strip().lower() in ["nan", "none", "", "null"]:
-        return "Sin observaciones adicionales registradas."
-    return str(texto).strip()
-
-
 def mostrar_evidencia(link_archivo):
     if link_archivo and str(link_archivo).strip() not in [
         "Sin archivo",
@@ -292,19 +275,18 @@ if rol == "Padre de Familia / Acudiente":
     if doc_hijo:
         resultado = df[
             df["documento"].astype(str).str.contains(doc_hijo, case=False, na=False)
-            | df["nombre"].astype(str).str.contains(doc_hijo, case=False, na=False)
+            | df["nombre"].str.contains(doc_hijo, case=False, na=False)
         ]
 
         if not resultado.empty:
             st.success("Registros del estudiante:")
             for index, row in resultado.iterrows():
-                detalles_limpios = limpiar_texto_detalles(row.get("detalles", ""))
                 st.info(
-                    f" **Estudiante:** {row.get('nombre', 'Estudiante')} ({row.get('grado', 'N/A')})\n"
-                    f" **Fecha:** {row.get('fecha', 'N/A')} | **Tipo:**"
-                    f" {row.get('tipo_registro', 'Registro')}\n**Detalles:** {detalles_limpios}"
+                    f" **Estudiante:** {row['nombre']} ({row['grado']})\n"
+                    f" **Fecha:** {row['fecha']} |  **Tipo:**"
+                    f" {row['tipo_registro']}\n**Detalles:** {row['detalles']}"
                 )
-                mostrar_evidencia(row.get("archivo", ""))
+                mostrar_evidencia(row["archivo"])
         else:
             st.warning("No se hallaron registros para el estudiante indicado.")
 
@@ -333,8 +315,8 @@ elif rol == "Docente / Directivo":
             )
 
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
-                type=["pdf", "png", "jpg", "jpeg", "docx"],
+                "Subir Acta Firmada (PDF, Imagen JPG/PNG)",
+                type=["pdf", "png", "jpg", "jpeg"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")
@@ -351,14 +333,12 @@ elif rol == "Docente / Directivo":
                         "utf-8"
                     )
 
-                detalles_enviar = limpiar_texto_detalles(detalles_reg)
-
                 datos_a_enviar = {
                     "documento": str(nuevo_doc),
                     "nombre": nuevo_nombre,
                     "grado": nuevo_grado,
                     "tipo_registro": tipo_reg,
-                    "detalles": detalles_enviar,
+                    "detalles": detalles_reg,
                     "fecha": str(fecha_reg),
                     "fileName": file_name,
                     "mimeType": mime_type,
@@ -377,7 +357,7 @@ elif rol == "Docente / Directivo":
                             "nombre": nuevo_nombre,
                             "grado": nuevo_grado,
                             "tipo_registro": tipo_reg,
-                            "detalles": detalles_enviar,
+                            "detalles": detalles_reg,
                             "fecha": str(fecha_reg),
                             "archivo": url_generada,
                         }
@@ -418,7 +398,7 @@ elif rol == "Docente / Directivo":
             fecha_reg = row.get("fecha", "")
             grado_reg = row.get("grado", "")
             doc_reg = row.get("documento", "")
-            detalles_reg = limpiar_texto_detalles(row.get("detalles", ""))
+            detalles_reg = row.get("detalles", "")
             archivo_reg = row.get("archivo", "Sin archivo")
 
             with st.expander(f" {nombre_est} - {tipo_reg} ({fecha_reg})"):

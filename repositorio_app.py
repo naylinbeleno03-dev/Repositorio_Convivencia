@@ -94,8 +94,13 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* Estructura limpia de botones idéntica a la del Chatbot */
-    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
+    /* Estructura limpia de botones: texto fijo en blanco sin cambios en hover o clic */
+    .stButton>button, 
+    div[data-testid="stDownloadButton"]>button, 
+    .stFormSubmitButton>button, 
+    a[data-testid="stLinkButton"],
+    button[data-testid="baseButton-secondary"],
+    button[data-testid="baseButton-primary"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -104,22 +109,36 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
-    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
-    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
+    /* Forzar que cualquier texto, span o p dentro del botón permanezca en blanco siempre */
+    .stButton>button *, 
+    div[data-testid="stDownloadButton"]>button *, 
+    .stFormSubmitButton>button *, 
+    a[data-testid="stLinkButton"] *,
+    button[data-testid="baseButton-secondary"] *,
+    button[data-testid="baseButton-primary"] * {
         color: #FFFFFF !important;
+        fill: #FFFFFF !important;
     }
 
-    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
+    /* Mantener estilo consistente al pasar el cursor o presionar */
+    .stButton>button:hover, 
+    div[data-testid="stDownloadButton"]>button:hover, 
+    .stFormSubmitButton>button:hover, 
+    a[data-testid="stLinkButton"]:hover,
+    .stButton>button:focus,
+    .stButton>button:active {
         background-color: #D4AF37 !important;
-        color: #0F172A !important;
         border-color: #D4AF37 !important;
     }
 
-    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
-    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
-    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
+    .stButton>button:hover *, 
+    div[data-testid="stDownloadButton"]>button:hover *, 
+    .stFormSubmitButton>button:hover *, 
+    a[data-testid="stLinkButton"]:hover *,
+    .stButton>button:focus *,
+    .stButton>button:active * {
         color: #0F172A !important;
+        fill: #0F172A !important;
     }
 
     [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
@@ -268,8 +287,8 @@ elif rol == "Docente / Directivo":
             )
 
             archivo_subido = st.file_uploader(
-                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX)",
-                type=["pdf", "png", "jpg", "jpeg", "docx"],
+                "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX, DOC)",
+                type=["pdf", "png", "jpg", "jpeg", "docx", "doc"],
             )
 
             submit = st.form_submit_button("Guardar en el Sistema")

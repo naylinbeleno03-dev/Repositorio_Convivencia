@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con los botones corregidos (Letras negras al presionar o pasar el cursor)
+# Estilos CSS optimizados con selectores directos a etiquetas internas para garantizar legibilidad
 st.markdown(
     """
     <style>
@@ -95,14 +95,12 @@ st.markdown(
     }
 
     /* =========================================================================
-       ESTILOS DE BOTONES: FONDO AZUL Y LETRAS BLANCAS POR DEFECTO
+       ESTILOS DEFINITIVOS PARA BOTONES (Fondo azul, texto blanco por defecto)
        ========================================================================= */
-    div.stButton > button, 
-    div.stFormSubmitButton > button, 
+    .stButton > button, 
+    .stFormSubmitButton > button, 
     div[data-testid="stDownloadButton"] > button, 
-    a[data-testid="stLinkButton"],
-    button[data-testid="baseButton-secondary"],
-    button[data-testid="baseButton-primary"] {
+    a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
         border: 1px solid #0F172A !important;
@@ -111,53 +109,49 @@ st.markdown(
         padding: 8px 16px !important;
     }
 
-    /* Forzar texto e íconos internos a blanco en estado normal */
-    div.stButton > button *, 
-    div.stFormSubmitButton > button *, 
-    div[data-testid="stDownloadButton"] > button *, 
-    a[data-testid="stLinkButton"] *,
-    button[data-testid="baseButton-secondary"] *,
-    button[data-testid="baseButton-primary"] * {
+    /* Forzar texto interno (p y span) a blanco en estado normal */
+    .stButton > button p, 
+    .stButton > button span,
+    .stFormSubmitButton > button p, 
+    .stFormSubmitButton > button span,
+    div[data-testid="stDownloadButton"] > button p, 
+    div[data-testid="stDownloadButton"] > button span,
+    a[data-testid="stLinkButton"] p,
+    a[data-testid="stLinkButton"] span {
         color: #FFFFFF !important;
-        fill: #FFFFFF !important;
         -webkit-text-fill-color: #FFFFFF !important;
     }
 
     /* =========================================================================
-       ESTADOS HOVER, FOCUS Y ACTIVE: FONDO DORADO Y LETRAS NEGRAS AL PRESIONAR
+       ESTADOS HOVER, FOCUS Y ACTIVE (Fondo dorado, texto NEGRO)
        ========================================================================= */
-    div.stButton > button:hover, 
-    div.stFormSubmitButton > button:hover, 
+    .stButton > button:hover, 
+    .stButton > button:focus, 
+    .stButton > button:active,
+    .stFormSubmitButton > button:hover, 
+    .stFormSubmitButton > button:focus, 
+    .stFormSubmitButton > button:active,
     div[data-testid="stDownloadButton"] > button:hover, 
+    div[data-testid="stDownloadButton"] > button:focus, 
+    div[data-testid="stDownloadButton"] > button:active,
     a[data-testid="stLinkButton"]:hover,
-    button[data-testid="baseButton-secondary"]:hover,
-    button[data-testid="baseButton-primary"]:hover,
-    div.stButton > button:focus, 
-    div.stFormSubmitButton > button:focus,
-    div.stButton > button:active, 
-    div.stFormSubmitButton > button:active,
-    button[data-testid="baseButton-secondary"]:focus,
-    button[data-testid="baseButton-secondary"]:active {
+    a[data-testid="stLinkButton"]:focus,
+    a[data-testid="stLinkButton"]:active {
         background-color: #D4AF37 !important;
         border-color: #D4AF37 !important;
         color: #000000 !important;
     }
 
-    /* Forzar texto NEGRO al pasar el mouse o presionar */
-    div.stButton > button:hover *, 
-    div.stFormSubmitButton > button:hover *, 
-    div[data-testid="stDownloadButton"] > button:hover *, 
-    a[data-testid="stLinkButton"]:hover *,
-    button[data-testid="baseButton-secondary"]:hover *,
-    button[data-testid="baseButton-primary"]:hover *,
-    div.stButton > button:focus *, 
-    div.stFormSubmitButton > button:focus *,
-    div.stButton > button:active *, 
-    div.stFormSubmitButton > button:active *,
-    button[data-testid="baseButton-secondary"]:focus *,
-    button[data-testid="baseButton-secondary"]:active * {
+    /* Forzar texto interno a NEGRO al pasar el mouse o hacer clic */
+    .stButton > button:hover p, .stButton > button:hover span,
+    .stButton > button:focus p, .stButton > button:focus span,
+    .stButton > button:active p, .stButton > button:active span,
+    .stFormSubmitButton > button:hover p, .stFormSubmitButton > button:hover span,
+    .stFormSubmitButton > button:focus p, .stFormSubmitButton > button:focus span,
+    .stFormSubmitButton > button:active p, .stFormSubmitButton > button:active span,
+    div[data-testid="stDownloadButton"] > button:hover p, div[data-testid="stDownloadButton"] > button:hover span,
+    a[data-testid="stLinkButton"]:hover p, a[data-testid="stLinkButton"]:hover span {
         color: #000000 !important;
-        fill: #000000 !important;
         -webkit-text-fill-color: #000000 !important;
     }
 

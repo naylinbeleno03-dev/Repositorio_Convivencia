@@ -11,7 +11,7 @@ st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS con corrección precisa para los estados de los botones al presionar
+# Estilos CSS idénticos a los del Chatbot (botones estables y legibles en ambos modos)
 st.markdown(
     """
     <style>
@@ -94,70 +94,31 @@ st.markdown(
         font-size: 0.95rem !important;
     }
 
-    /* ==========================================================================
-       ESTILOS DE BOTONES: Normal, Hover y al Presionar (Active / Focus)
-       ========================================================================== */
-    div.stButton > button, 
-    div.stDownloadButton > button, 
-    div.stFormSubmitButton > button, 
-    a[data-testid="stLinkButton"] {
+    /* Estilos de botones exactamente iguales a los del Chatbot (Sin fallos al presionar) */
+    .stButton>button, div[data-testid="stDownloadButton"]>button, .stFormSubmitButton>button, a[data-testid="stLinkButton"] {
         background-color: #0F172A !important;
         color: #FFFFFF !important;
-        border: 2px solid #0F172A !important;
+        border: 1px solid #0F172A !important;
         border-radius: 8px !important;
         font-weight: 600 !important;
         padding: 8px 16px !important;
-        transition: all 0.2s ease-in-out !important;
     }
 
-    div.stButton > button *, 
-    div.stDownloadButton > button *, 
-    div.stFormSubmitButton > button *, 
-    a[data-testid="stLinkButton"] * {
+    .stButton>button p, div[data-testid="stDownloadButton"]>button p,
+    .stButton>button span, div[data-testid="stDownloadButton"]>button span,
+    .stFormSubmitButton>button p, .stFormSubmitButton>button span, a[data-testid="stLinkButton"] span {
         color: #FFFFFF !important;
     }
 
-    /* Al pasar el cursor (Hover) */
-    div.stButton > button:hover, 
-    div.stDownloadButton > button:hover, 
-    div.stFormSubmitButton > button:hover, 
-    a[data-testid="stLinkButton"]:hover {
-        background-color: #1E293B !important;
-        color: #D4AF37 !important;
-        border-color: #D4AF37 !important;
-        box-shadow: 0 0 10px rgba(212, 175, 55, 0.3) !important;
-    }
-
-    div.stButton > button:hover *, 
-    div.stDownloadButton > button:hover *, 
-    div.stFormSubmitButton > button:hover *, 
-    a[data-testid="stLinkButton"]:hover * {
-        color: #D4AF37 !important;
-    }
-
-    /* AL PRESIONAR (Active / Focus) -> Se vuelve Dorado con texto oscuro y brillo exterior */
-    div.stButton > button:active, 
-    div.stButton > button:focus, 
-    div.stDownloadButton > button:active, 
-    div.stDownloadButton > button:focus, 
-    div.stFormSubmitButton > button:active, 
-    div.stFormSubmitButton > button:focus,
-    a[data-testid="stLinkButton"]:active,
-    a[data-testid="stLinkButton"]:focus {
+    .stButton>button:hover, div[data-testid="stDownloadButton"]>button:hover, .stFormSubmitButton>button:hover, a[data-testid="stLinkButton"]:hover {
         background-color: #D4AF37 !important;
         color: #0F172A !important;
-        border-color: #0F172A !important;
-        box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.6), 0 0 15px rgba(212, 175, 55, 0.5) !important;
+        border-color: #D4AF37 !important;
     }
 
-    div.stButton > button:active *, 
-    div.stButton > button:focus *, 
-    div.stDownloadButton > button:active *, 
-    div.stDownloadButton > button:focus *, 
-    div.stFormSubmitButton > button:active *, 
-    div.stFormSubmitButton > button:focus *,
-    a[data-testid="stLinkButton"]:active *,
-    a[data-testid="stLinkButton"]:focus * {
+    .stButton>button:hover p, div[data-testid="stDownloadButton"]>button:hover p,
+    .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
+    .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
         color: #0F172A !important;
     }
 

@@ -87,14 +87,16 @@ st.markdown(
         font-weight: 600 !important;
     }
 
+    /* Modificación clave para forzar texto en blanco */
     .header-box p {
         color: #FFFFFF !important;
+        -webkit-text-fill-color: #FFFFFF !important;
         margin-top: 6px !important;
         margin-bottom: 0 !important;
         font-size: 0.95rem !important;
     }
 
-    /* BOTONES BLINDADOS (Funcionan perfecto sin importar el modo claro u oscuro del navegador) */
+    /* BOTONES BLINDADOS */
     .stButton>button, 
     div[data-testid="stDownloadButton"]>button, 
     .stFormSubmitButton>button, 
@@ -121,7 +123,7 @@ st.markdown(
         -webkit-text-fill-color: #FFFFFF !important;
     }
 
-    /* Estado Hover (Al pasar el mouse o presionar: Dorado con letras oscuras) */
+    /* Estado Hover */
     .stButton>button:hover, 
     div[data-testid="stDownloadButton"]>button:hover, 
     .stFormSubmitButton>button:hover, 

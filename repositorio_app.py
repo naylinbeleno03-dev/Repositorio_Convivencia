@@ -6,20 +6,15 @@ import requests
 import streamlit as st
 from zoneinfo import ZoneInfo
 
-# Configuración de la página forzando base clara para evitar problemas de visualización
+# Configuración de la página
 st.set_page_config(
     page_title="Repositorio Institucional - Convivencia", layout="centered"
 )
 
-# Estilos CSS limpios y estables basados en tu versión original
+# Estilos CSS optimizados para garantizar texto blanco en el encabezado y legibilidad perfecta
 st.markdown(
     """
     <style>
-    .stApp {
-        background-color: #F3F4F6 !important;
-        color: #1F2937 !important;
-    }
-    
     /* Barra lateral en azul oscuro elegante */
     section[data-testid="stSidebar"] {
         background-color: #1E293B !important;
@@ -71,6 +66,7 @@ st.markdown(
         font-weight: 600 !important;
     }
 
+    /* Caja de encabezado con letras SIEMPRE en blanco */
     .header-box {
         background-color: #0F172A !important;
         padding: 22px;
@@ -80,18 +76,12 @@ st.markdown(
         margin-bottom: 24px;
     }
     
-    .header-box h1 {
+    .header-box h1, 
+    .header-box p, 
+    .header-box span, 
+    .header-box * {
         color: #FFFFFF !important;
-        margin: 0 !important;
-        font-size: 1.65rem !important;
-        font-weight: 600 !important;
-    }
-
-    .header-box p {
-        color: #FFFFFF !important;
-        margin-top: 6px !important;
-        margin-bottom: 0 !important;
-        font-size: 0.95rem !important;
+        -webkit-text-fill-color: #FFFFFF !important;
     }
 
     /* Estructura limpia de botones */
@@ -120,10 +110,6 @@ st.markdown(
     .stButton>button:hover span, div[data-testid="stDownloadButton"]>button:hover span,
     .stFormSubmitButton>button:hover p, .stFormSubmitButton>button:hover span, a[data-testid="stLinkButton"]:hover span {
         color: #0F172A !important;
-    }
-
-    [data-testid="stWidgetLabel"] p, label, .stMarkdown p {
-        color: #1F2937 !important;
     }
 
     .stTextInput>div>div>input, .stSelectbox>div>div>div, .stTextArea textarea {
@@ -267,7 +253,7 @@ elif rol == "Docente / Directivo":
                 "Fecha", value=hoy_colombia, max_value=hoy_colombia
             )
 
-            # Se incluye soporte para archivos .docx y .doc
+            # Soporte completo para archivos PDF, imágenes y documentos Word (.docx, .doc)
             archivo_subido = st.file_uploader(
                 "Subir Acta Firmada (Formatos permitidos: PDF, PNG, JPG, DOCX, DOC)",
                 type=["pdf", "png", "jpg", "jpeg", "docx", "doc"],
